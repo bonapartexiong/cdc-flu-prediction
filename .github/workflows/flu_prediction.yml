@@ -6,7 +6,7 @@ name: CDC Flu Prediction
 on:
   # Run every Monday at 8 AM UTC (12 AM PST)
   schedule:
-    - cron: '0 8 * * 1'
+    - cron: '1 8 * * 1'
   
   # Allow manual trigger
   workflow_dispatch:
