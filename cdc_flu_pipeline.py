@@ -49,8 +49,8 @@ def fetch_cdc_data():
     params = {
         "$limit": 5000,
         "$order": "week_start DESC",
-        "$where": f"state_name='{STATE}'",
-        "$select": "week_start,week,ilitotal,total_patients,percent_ili"
+        "$where": f"state_name = '{STATE}'",
+        "$select": "week_start, week, ilitotal, total_patients, percent_ili"
     }
     
     try:
