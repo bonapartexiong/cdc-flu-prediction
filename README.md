@@ -1,5 +1,5 @@
 # ============================================================================
-# README.md - GitHub Actions Deployment Guide
+# Use CDC flu data to detect flu surge in California (w Email notifications)
 # ============================================================================
 
 # CDC Flu Prediction Pipeline - GitHub Actions
