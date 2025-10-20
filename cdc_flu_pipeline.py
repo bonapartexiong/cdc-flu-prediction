@@ -245,11 +245,16 @@ def train_model(df):
     if len(df_feat) < 13:  # Reduced from 20 to 13
         raise ValueError(f"Insufficient training data: only {len(df_feat)} rows after feature engineering (need at least 13)")
     
-    # Define feature columns
+    # Define feature columns - EXCLUDE non-numeric columns
     exclude_cols = ['date', 'epiweek', 'year', 'week', 'ili_cases', 
                     'ili', 'wili', 'num_ili', 'num_patients', 'num_providers',
-                    'region', 'lag_year']
-    feature_cols = [c for c in df_feat.columns if c not in exclude_cols]
+                    'region', 'lag_year', 'release_date']  # Added release_date
+    
+    # Only include numeric columns
+    numeric_cols = df_feat.select_dtypes(include=[np.number]).columns.tolist()
+    feature_cols = [c for c in numeric_cols if c not in exclude_cols and c != target]
+    
+    logger.info(f"  Selected {len(feature_cols)} numeric features from {len(numeric_cols)} total numeric columns")
     
     # FIX: Handle remaining NaN values in features by imputation
     X = df_feat[feature_cols].copy()
@@ -261,8 +266,15 @@ def train_model(df):
             X[col] = X[col].fillna(X[col].mean())
     
     logger.info(f"  Training with {len(X)} samples and {len(feature_cols)} features")
+    logger.info(f"  Feature dtypes: {X.dtypes.unique().tolist()}")
     
-    # Rest of the function remains the same...
+    # Validate all features are numeric
+    non_numeric = X.select_dtypes(exclude=[np.number]).columns.tolist()
+    if non_numeric:
+        logger.error(f"Non-numeric features found: {non_numeric}")
+        raise ValueError(f"Non-numeric features cannot be used in LightGBM: {non_numeric}")
+    
+    # Train model with parameters tuned for flu seasonality
     model = lgb.LGBMRegressor(
         n_estimators=300,
         max_depth=6,
