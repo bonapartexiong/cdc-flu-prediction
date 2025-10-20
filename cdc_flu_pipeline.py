@@ -187,7 +187,7 @@ def create_features(df):
     for lag in range(1, 9):
         df[f'lag_{lag}'] = df[target].shift(lag)
     
-    # Rolling statistics
+    # Rolling statistics - use min_periods to avoid too many NaN
     for window in [2, 4, 8, 12]:
         df[f'roll_mean_{window}'] = df[target].shift(1).rolling(window=window, min_periods=1).mean()
         df[f'roll_std_{window}'] = df[target].shift(1).rolling(window=window, min_periods=1).std()
@@ -203,8 +203,9 @@ def create_features(df):
     df['week_sin'] = np.sin(2 * np.pi * df['week_of_year'] / 52)
     df['week_cos'] = np.cos(2 * np.pi * df['week_of_year'] / 52)
     
-    # Year-over-year comparison (52 weeks ago)
-    df['lag_52'] = df[target].shift(52)
+    # Year-over-year comparison (52 weeks ago) - optional, can create NaN
+    if len(df) > 52:
+        df['lag_52'] = df[target].shift(52)
     
     # Trend features
     df['trend_2w'] = df[target].shift(1) - df[target].shift(3)
@@ -219,10 +220,17 @@ def create_features(df):
     # Is flu season (October-March in Northern Hemisphere)
     df['is_flu_season'] = df['month'].isin([10, 11, 12, 1, 2, 3]).astype(int)
     
-    # Drop rows with NaN in critical features
-    df_clean = df.dropna()
+    # FIX: Only drop rows where target is missing or critical features are missing
+    # Instead of dropping all rows with any NaN
+    critical_cols = [target]
     
-    logger.info(f"  Features created: {len(df)} → {len(df_clean)} usable rows after dropna")
+    # Only include lag_52 if we have enough data
+    if 'lag_52' in df.columns:
+        critical_cols.append('lag_52')
+    
+    df_clean = df.dropna(subset=critical_cols)
+    
+    logger.info(f"  Features created: {len(df)} → {len(df_clean)} usable rows after selective dropna")
     
     return df_clean, target
 
@@ -233,8 +241,9 @@ def train_model(df):
     
     df_feat, target = create_features(df)
     
-    if len(df_feat) < 20:
-        raise ValueError(f"Insufficient training data: only {len(df_feat)} rows after feature engineering")
+    # FIX: More reasonable minimum data requirement
+    if len(df_feat) < 13:  # Reduced from 20 to 13
+        raise ValueError(f"Insufficient training data: only {len(df_feat)} rows after feature engineering (need at least 13)")
     
     # Define feature columns
     exclude_cols = ['date', 'epiweek', 'year', 'week', 'ili_cases', 
@@ -242,12 +251,18 @@ def train_model(df):
                     'region', 'lag_year']
     feature_cols = [c for c in df_feat.columns if c not in exclude_cols]
     
-    X = df_feat[feature_cols]
+    # FIX: Handle remaining NaN values in features by imputation
+    X = df_feat[feature_cols].copy()
     y = df_feat[target]
+    
+    # Fill any remaining NaN values with column means
+    for col in X.columns:
+        if X[col].isnull().any():
+            X[col] = X[col].fillna(X[col].mean())
     
     logger.info(f"  Training with {len(X)} samples and {len(feature_cols)} features")
     
-    # Train model with parameters tuned for flu seasonality
+    # Rest of the function remains the same...
     model = lgb.LGBMRegressor(
         n_estimators=300,
         max_depth=6,
@@ -344,6 +359,18 @@ def predict_future(model, df, feature_cols):
     
     return pd.DataFrame([prediction])
 
+def validate_data_sufficiency(df):
+    """Validate that we have enough data for feature engineering"""
+    min_weeks_required = 13
+    available_weeks = len(df)
+    
+    logger.info(f"Data validation: {available_weeks} weeks available, {min_weeks_required} required")
+    
+    if available_weeks < min_weeks_required:
+        logger.warning(f"Limited data: Only {available_weeks} weeks available")
+        logger.warning("Consider using simpler models or gathering more historical data")
+    
+    return available_weeks >= min_weeks_required
 
 def check_alerts(prediction, recent_avg, threshold_mult=1.15):
     """Check if prediction exceeds threshold"""
@@ -555,7 +582,10 @@ def run_pipeline():
     try:
         # 1. Fetch data
         df = fetch_flu_data()
-        
+
+        # Validate data sufficiency
+        if not validate_data_sufficiency(df):
+            logger.warning("Proceeding with limited data - predictions may be less accurate")
         # 2. Train model
         model, feature_cols = train_model(df)
         
