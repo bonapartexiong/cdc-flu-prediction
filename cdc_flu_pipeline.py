@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Configuration from environment variables
 # ---------------------------------------------------------------------------
-CDC_API = "https://data.cdc.gov/resource/pwn4-m3yp.json"
+CDC_API = "https://data.cdc.gov/resource/malr-fpvq.json"
 STATE = os.getenv("STATE", "California")
 THRESHOLD = float(os.getenv("THRESHOLD_MULTIPLIER", "1.1"))
 
@@ -64,7 +64,7 @@ def fetch_cdc_data():
             "$limit": limit,
             "$offset": offset,
             "$order": "week_start DESC",
-            "$where": f"state_name='{STATE}'",
+            "$where": f"statename='{STATE}'",
             "$select": "week_start,week,ilitotal,total_patients,percent_ili"
         }
 
