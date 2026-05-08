@@ -353,61 +353,89 @@ class TestSendEmail:
 # ---------------------------------------------------------------------------
 
 class TestFetchCdcData:
-    def test_fetches_and_parses_data(self, monkeypatch):
+    def test_fetches_and_parses_delphi_data(self, monkeypatch):
+        """Delphi API response: {"result": 1, "epidata": [...]}."""
         mock_response = MagicMock()
         mock_response.raise_for_status.return_value = None
-        mock_response.json.return_value = [{
-            'week_start': '2024-01-01T00:00:00.000',
-            'week': '1',
-            'ilitotal': '1200',
-            'total_patients': '24000',
-            'percent_ili': '5.0',
-        }, {
-            'week_start': '2024-01-08T00:00:00.000',
-            'week': '2',
-            'ilitotal': '1350',
-            'total_patients': '25000',
-            'percent_ili': '5.4',
-        }]
+        mock_response.json.return_value = {
+            "result": 1,
+            "epidata": [
+                {
+                    "week_start": "2024-01-07",
+                    "epiweek": 202401,
+                    "num_ili": 1200,
+                    "num_patients": 24000,
+                    "ili": 5.0,
+                },
+                {
+                    "week_start": "2024-01-14",
+                    "epiweek": 202402,
+                    "num_ili": 1350,
+                    "num_patients": 25000,
+                    "ili": 5.4,
+                },
+            ],
+        }
 
-        with patch('requests.get', return_value=mock_response) as mock_get:
+        with patch("requests.get", return_value=mock_response) as mock_get:
             df = fetch_cdc_data()
             mock_get.assert_called_once()
             assert len(df) == 2
-            assert df['ilitotal'].iloc[0] == 1200.0
-            assert isinstance(df['week_start'].iloc[0], pd.Timestamp)
+            assert df["ilitotal"].iloc[0] == 1200.0
+            assert df["total_patients"].iloc[0] == 24000.0
+            assert df["percent_ili"].iloc[0] == 5.0
+            assert df["week"].iloc[0] == 202401
+            assert isinstance(df["week_start"].iloc[0], pd.Timestamp)
 
-    def test_paginates_across_multiple_batches(self, monkeypatch):
-        """Simulate two pages of results."""
-        call_count = [0]
+    def test_raises_on_api_error_result(self, monkeypatch):
+        """When result != 1 the function should raise ValueError."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "result": -1,
+            "message": "bad request",
+            "epidata": [],
+        }
 
-        LIMIT = 5000  # matches the constant inside fetch_cdc_data
+        with patch("requests.get", return_value=mock_response):
+            with pytest.raises(ValueError, match="bad request"):
+                fetch_cdc_data()
 
-        def side_effect(url, params, timeout):
-            call_count[0] += 1
-            mock = MagicMock()
-            mock.raise_for_status.return_value = None
-            if call_count[0] == 1:
-                # First page returns exactly LIMIT records → triggers
-                # next iteration (batch not smaller than limit)
-                mock.json.return_value = [
-                    {'week_start': f'2024-01-01T00:00:00.000',
-                     'week': '1', 'ilitotal': '1000',
-                     'total_patients': '20000', 'percent_ili': '5.0'}
-                ] * LIMIT
-            else:
-                # Second page returns 1 record (< LIMIT) → loop stops
-                mock.json.return_value = [
-                    {'week_start': '2024-01-22T00:00:00.000',
-                     'week': '4', 'ilitotal': '1100',
-                     'total_patients': '21000', 'percent_ili': '5.2'}
-                ]
-            return mock
+    def test_raises_on_empty_epidata(self, monkeypatch):
+        """When epidata is an empty list the function should raise ValueError."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "result": 1,
+            "epidata": [],
+        }
 
-        with patch('requests.get', side_effect=side_effect):
-            df = fetch_cdc_data()
-            assert call_count[0] == 2
-            assert len(df) == LIMIT + 1  # 5000 from page 1 + 1 from page 2
+        with patch("requests.get", return_value=mock_response):
+            with pytest.raises(ValueError, match="No data returned"):
+                fetch_cdc_data()
+
+    def test_accepts_state_abbr_parameter(self, monkeypatch):
+        """When state_abbr is passed, it should be used directly (lowercased)."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "result": 1,
+            "epidata": [
+                {
+                    "week_start": "2024-01-07",
+                    "epiweek": 202401,
+                    "num_ili": 1200,
+                    "num_patients": 24000,
+                    "ili": 5.0,
+                },
+            ],
+        }
+
+        with patch("requests.get", return_value=mock_response) as mock_get:
+            df = fetch_cdc_data(state_abbr="TX")
+            call_args = mock_get.call_args
+            # Verify the regions param uses the provided abbreviation (lowercased)
+            assert call_args[1]["params"]["regions"] == "tx"
 
 
 # ---------------------------------------------------------------------------

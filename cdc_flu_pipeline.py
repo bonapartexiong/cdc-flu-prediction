@@ -32,9 +32,37 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Configuration from environment variables
 # ---------------------------------------------------------------------------
-CDC_API = "https://data.cdc.gov/resource/malr-fpvq.json"
+CDC_API = "https://api.delphi.cmu.edu/epidata/fluview/"
 STATE = os.getenv("STATE", "California")
 THRESHOLD = float(os.getenv("THRESHOLD_MULTIPLIER", "1.1"))
+
+# State abbreviation mapping for Delphi API (requires 2-letter codes)
+_STATE_ABBR_MAP = {
+    "alabama": "al", "alaska": "ak", "arizona": "az", "arkansas": "ar",
+    "california": "ca", "colorado": "co", "connecticut": "ct", "delaware": "de",
+    "florida": "fl", "georgia": "ga", "hawaii": "hi", "idaho": "id",
+    "illinois": "il", "indiana": "in", "iowa": "ia", "kansas": "ks",
+    "kentucky": "ky", "louisiana": "la", "maine": "me", "maryland": "md",
+    "massachusetts": "ma", "michigan": "mi", "minnesota": "mn", "mississippi": "ms",
+    "missouri": "mo", "montana": "mt", "nebraska": "ne", "nevada": "nv",
+    "new hampshire": "nh", "new jersey": "nj", "new mexico": "nm", "new york": "ny",
+    "north carolina": "nc", "north dakota": "nd", "ohio": "oh", "oklahoma": "ok",
+    "oregon": "or", "pennsylvania": "pa", "rhode island": "ri", "south carolina": "sc",
+    "south dakota": "sd", "tennessee": "tn", "texas": "tx", "utah": "ut",
+    "vermont": "vt", "virginia": "va", "washington": "wa", "west virginia": "wv",
+    "wisconsin": "wi", "wyoming": "wy", "district of columbia": "dc",
+    "puerto rico": "pr", "american samoa": "as", "guam": "gu",
+    "northern mariana islands": "mp", "u.s. virgin islands": "vi",
+}
+_STATE_ABBR_MAP.update({v: v for v in _STATE_ABBR_MAP.values()})  # passthrough
+
+
+def _get_state_abbr(state_name):
+    """Resolve state name/abbreviation to a 2-letter code for the Delphi API."""
+    key = state_name.strip().lower()
+    if key in _STATE_ABBR_MAP:
+        return _STATE_ABBR_MAP[key]
+    raise ValueError(f"Unknown state: {state_name}")
 
 # Email config
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -51,58 +79,84 @@ ALERT_COOLDOWN_DAYS = 6
 # Data fetching
 # ===========================================================================
 
-def fetch_cdc_data():
-    """Fetch flu data from CDC API with pagination support."""
-    logger.info(f"Fetching CDC data for {STATE}...")
+def fetch_cdc_data(state_abbr=None):
+    """Fetch flu data from CMU Delphi API (fluview endpoint).
 
-    all_records = []
-    offset = 0
-    limit = 5000
+    Parameters
+    ----------
+    state_abbr : str or None
+        Two-letter state abbreviation (e.g. 'ca').  When None the
+        STATE environment variable + abbreviation map is used.
 
-    while True:
-        params = {
-            "$limit": limit,
-            "$offset": offset,
-            "$order": "week_start DESC",
-            "$where": f"statename='{STATE}'",
-            "$select": "week_start,week,ilitotal,total_patients,percent_ili"
-        }
+    Returns a DataFrame with columns:
+        week_start, week, ilitotal, total_patients, percent_ili
+    """
+    if state_abbr is None:
+        state_abbr = _get_state_abbr(STATE)
+    else:
+        state_abbr = state_abbr.lower()
 
-        try:
-            response = requests.get(CDC_API, params=params, timeout=30)
-            response.raise_for_status()
-            batch = response.json()
+    logger.info("Fetching flu data for %s from Delphi API...", state_abbr.upper())
 
-            if not batch:
-                break
+    # Compute epiweek range: 8 years of history, 1 year forward buffer
+    now = datetime.now()
+    start_year = now.year - 8
+    end_year = now.year + 1
+    epiweeks = f"{start_year}01-{end_year}52"
 
-            all_records.extend(batch)
+    params = {
+        "regions": state_abbr,
+        "epiweeks": epiweeks,
+    }
 
-            if len(batch) < limit:
-                break
+    try:
+        response = requests.get(CDC_API, params=params, timeout=30)
+        response.raise_for_status()
+        data = response.json()
 
-            offset += limit
+        if data.get("result") != 1:
+            raise ValueError(
+                f"Delphi API error: {data.get('message', 'unknown error')}"
+            )
 
-        except Exception as e:
-            logger.error(f"Failed to fetch CDC data: {e}")
-            raise
+        records = data.get("epidata", [])
 
-    df = pd.DataFrame(all_records)
+        if not records:
+            raise ValueError(f"No data returned from Delphi API for {state_abbr.upper()}")
 
-    if df.empty:
-        raise ValueError(f"No data returned from CDC API for {STATE}")
+    except requests.RequestException as e:
+        logger.error("Failed to fetch data from Delphi API: %s", e)
+        raise
+    except Exception:
+        raise
 
-    df['week_start'] = pd.to_datetime(df['week_start'])
-    df['week'] = df['week'].astype(int)
-    df['ilitotal'] = pd.to_numeric(df['ilitotal'], errors='coerce')
-    df['percent_ili'] = pd.to_numeric(df['percent_ili'], errors='coerce')
+    # Normalize field names to match the rest of the pipeline
+    for r in records:
+        r["ilitotal"]      = r.pop("num_ili")
+        r["total_patients"] = r.pop("num_patients")
+        r["percent_ili"]   = r.pop("ili")
 
-    df = df.sort_values('week_start').reset_index(drop=True)
+    df = pd.DataFrame(records)
+
+    # Map Delphi field name → name the rest of the pipeline expects
+    df = df.rename(columns={"epiweek": "week"})
+
+    # Keep only columns we actually use
+    cols = ["week_start", "week", "ilitotal", "total_patients", "percent_ili"]
+    df = df[cols]
+
+    df["week_start"] = pd.to_datetime(df["week_start"])
+    df["week"] = df["week"].astype(int)
+    df["ilitotal"] = pd.to_numeric(df["ilitotal"], errors="coerce")
+    df["total_patients"] = pd.to_numeric(df["total_patients"], errors="coerce")
+    df["percent_ili"] = pd.to_numeric(df["percent_ili"], errors="coerce")
+
+    df = df.sort_values("week_start").reset_index(drop=True)
     logger.info(
         "✓ Fetched %d weeks (%s to %s)",
         len(df),
-        df['week_start'].min().date(),
-        df['week_start'].max().date()
+        df["week_start"].min().date(),
+        df["week_start"].max().date(),
     )
     return df
 
@@ -493,7 +547,7 @@ def send_email(alert, prediction, plot_buf, threshold):
 
         <p style="margin-top: 30px; color: #666; font-size: 12px;">
             <em>Automated alert from the CDC Flu Prediction System (GitHub Actions)</em><br>
-            Data source: CDC FluView API  |  State: {STATE}<br>
+            Data source: CMU Delphi FluView API  |  State: {STATE}<br>
             Chart is also attached as flu_forecast.png
         </p>
     </body>
