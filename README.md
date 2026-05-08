@@ -59,7 +59,7 @@ git push -u origin main
 |-------------|---------|-------------|
 | `SMTP_SERVER` | `smtp.gmail.com` | SMTP server |
 | `SMTP_PORT` | `587` | SMTP port |
-| `THRESHOLD_MULTIPLIER` | `1.1` | Alert threshold (1.1 = 10% above avg) |
+| `DEVIATIONTHRESHOLD` | `0.2` | Alert threshold (0.2 = 20% above Prediction) |
 
 ### Step 4: Enable GitHub Actions
 
