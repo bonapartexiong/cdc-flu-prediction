@@ -414,6 +414,36 @@ class TestFetchCdcData:
             with pytest.raises(ValueError, match="No data returned"):
                 fetch_cdc_data()
 
+    def test_fetches_without_week_start_field(self, monkeypatch):
+        """When the API omits week_start, derive it from epiweek."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "result": 1,
+            "epidata": [
+                {
+                    "epiweek": 202401,
+                    "num_ili": 1200,
+                    "num_patients": 24000,
+                    "ili": 5.0,
+                },
+                {
+                    "epiweek": 202402,
+                    "num_ili": 1350,
+                    "num_patients": 25000,
+                    "ili": 5.4,
+                },
+            ],
+        }
+
+        with patch("requests.get", return_value=mock_response):
+            df = fetch_cdc_data()
+            # week_start should be derived from epiweek
+            assert df["week_start"].iloc[0] == pd.Timestamp("2024-01-07")
+            assert df["week_start"].iloc[1] == pd.Timestamp("2024-01-14")
+            assert df["week"].iloc[0] == 202401
+            assert df["ilitotal"].iloc[0] == 1200.0
+
     def test_accepts_state_abbr_parameter(self, monkeypatch):
         """When state_abbr is passed, it should be used directly (lowercased)."""
         mock_response = MagicMock()

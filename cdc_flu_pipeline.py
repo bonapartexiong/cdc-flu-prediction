@@ -64,6 +64,32 @@ def _get_state_abbr(state_name):
         return _STATE_ABBR_MAP[key]
     raise ValueError(f"Unknown state: {state_name}")
 
+
+def _epiweek_to_date(epiweek):
+    """Convert MMWR epiweek (YYYYWW) to the Sunday start date.
+
+    MMWR weeks start on Sunday. The first epiweek of the year is the week
+    that contains January 4 (i.e., the first week with ≥4 days in January).
+
+    When the previous year has 53 MMWR weeks (occurs when that year starts
+    on a Sunday, or on a Saturday in a leap year), the first epiweek of the
+    current year is shifted forward by one week.
+    """
+    year = epiweek // 100
+    week = epiweek % 100
+    jan4 = datetime(year, 1, 4)
+    # Days since preceding Sunday (Sunday=0 … Saturday=6)
+    sunday_offset = (jan4.weekday() + 1) % 7
+    sunday_of_week1 = jan4 - timedelta(days=sunday_offset)
+
+    # A year has 53 MMWR weeks when Jan 1 is Sunday (non-leap) or Saturday (leap)
+    prev_jan1 = datetime(year - 1, 1, 1)
+    prev_is_leap = ((year - 1) % 4 == 0 and (year - 1) % 100 != 0) or ((year - 1) % 400 == 0)
+    if prev_jan1.weekday() == 6 or (prev_is_leap and prev_jan1.weekday() == 5):
+        sunday_of_week1 += timedelta(weeks=1)
+
+    return sunday_of_week1 + timedelta(weeks=week - 1)
+
 # Email config
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
@@ -140,6 +166,10 @@ def fetch_cdc_data(state_abbr=None):
 
     # Map Delphi field name → name the rest of the pipeline expects
     df = df.rename(columns={"epiweek": "week"})
+
+    # Compute week_start from epiweek if the API doesn't provide it
+    if 'week_start' not in df.columns:
+        df['week_start'] = df['week'].apply(_epiweek_to_date)
 
     # Keep only columns we actually use
     cols = ["week_start", "week", "ilitotal", "total_patients", "percent_ili"]
