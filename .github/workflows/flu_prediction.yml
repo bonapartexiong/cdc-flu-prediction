@@ -48,7 +48,7 @@ jobs:
         EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
         SMTP_SERVER: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
         SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
-        THRESHOLD_MULTIPLIER: ${{ secrets.THRESHOLD_MULTIPLIER || '1.1' }}
+        DEVIATIONTHRESHOLD: ${{ secrets.DEVIATIONTHRESHOLD || '1.1' }}
       run: |
         python cdc_flu_pipeline.py
 
