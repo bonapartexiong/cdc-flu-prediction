@@ -24,6 +24,7 @@ on:
 
 jobs:
   test:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
     - name: 📥 Checkout repository
@@ -45,7 +46,6 @@ jobs:
 
   predict-flu-activity:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
