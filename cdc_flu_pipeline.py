@@ -36,11 +36,19 @@ logger = logging.getLogger(__name__)
 CDC_API = "https://api.delphi.cmu.edu/epidata/fluview/"
 STATE = os.getenv("STATE", "California")
 
-# Prediction persistence — stored for next-run comparison
-PREDICTION_FILE = "output/last_prediction.json"
+# Prediction persistence — stored for next-run comparison.
+# Kept in a tracked state/ directory so GitHub Actions can commit it and
+# compare the latest actual week against the prior forecast next week.
+PREDICTION_FILE = os.getenv("PREDICTION_FILE", "state/last_prediction.json")
 
 # Deviation threshold for comparison emails (0.2 = 20 %)
 DEVIATION_THRESHOLD = float(os.getenv("DEVIATION_THRESHOLD", "0.2"))
+
+# Threshold for the "latest week exceeds prediction" alert (0.03 = 3 %).
+# When the most recent data point is more than this far above the volume
+# predicted for that same week, the weekly email flags it with a vertical
+# red line on the 8-week chart.
+EXCEED_THRESHOLD = float(os.getenv("EXCEED_THRESHOLD", "0.03"))
 
 # State abbreviation mapping for Delphi API (requires 2-letter codes)
 _STATE_ABBR_MAP = {
@@ -396,7 +404,7 @@ def save_prediction(prediction):
         One-row DataFrame with columns week_start, predicted_ili,
         ci_lower, ci_upper.
     """
-    os.makedirs('output', exist_ok=True)
+    os.makedirs(os.path.dirname(PREDICTION_FILE) or '.', exist_ok=True)
 
     record = {
         'week_start': prediction['week_start'].iloc[0].strftime('%Y-%m-%d'),
@@ -484,6 +492,61 @@ def find_actual_for_prediction(df, saved_pred):
     return float(actual)
 
 
+def evaluate_last_data_point(df, saved_pred):
+    """Compare the most recent actual week against its prior prediction.
+
+    Used by the weekly email's red-line alert: when the latest data point
+    exceeds the volume predicted for that same week by more than
+    EXCEED_THRESHOLD (3 % by default), the alert fires.
+
+    Returns
+    -------
+    dict
+        Keys: week_start (Timestamp), actual_ili (float),
+        predicted_ili (float or None), pct_deviation (float or None),
+        exceeds (bool).
+    """
+    last = df.iloc[-1]
+    result = {
+        'week_start': pd.Timestamp(last['week_start']),
+        'actual_ili': float(last['ilitotal']),
+        'predicted_ili': None,
+        'pct_deviation': None,
+        'exceeds': False,
+    }
+
+    if saved_pred is None:
+        logger.info("No prior prediction — latest week comparison unavailable")
+        return result
+
+    pred_date = pd.Timestamp(saved_pred['week_start'])
+    last_date = pd.Timestamp(last['week_start'])
+
+    if pred_date != last_date:
+        logger.info(
+            "Saved prediction is for %s but latest data point is %s — "
+            "no same-week comparison available",
+            pred_date.date(), last_date.date(),
+        )
+        return result
+
+    predicted = float(saved_pred['predicted_ili'])
+    actual = result['actual_ili']
+
+    if predicted <= 0:
+        return result
+
+    result['predicted_ili'] = predicted
+    result['pct_deviation'] = (actual - predicted) / predicted * 100
+    result['exceeds'] = actual > predicted * (1 + EXCEED_THRESHOLD)
+
+    logger.info(
+        "Latest week (%s) is %+.1f%% vs predicted volume (threshold +%.1f%%)",
+        last_date.date(), result['pct_deviation'], EXCEED_THRESHOLD * 100,
+    )
+    return result
+
+
 # ===========================================================================
 # Visualisation
 # ===========================================================================
@@ -555,6 +618,56 @@ def create_plot(historical, prediction, actual_point=None):
         f'{STATE} Flu Activity — Next Week Forecast\n'
         f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M UTC")}',
         fontsize=14, fontweight='bold', pad=20
+    )
+    ax.legend(loc='best', fontsize=10)
+    ax.grid(True, alpha=0.3, linestyle='--')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+    buf.seek(0)
+    plt.close()
+
+    return buf
+
+
+def create_weekly_plot(df, saved_pred=None):
+    """Create a PNG chart of weekly flu cases over the past 8 weeks.
+
+    When the latest data point exceeds the predicted volume by more than
+    EXCEED_THRESHOLD (3 % by default), a vertical red line is drawn at that
+    point to flag the overage.
+    """
+    recent = df.tail(8).copy()
+    evaluation = evaluate_last_data_point(df, saved_pred)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    ax.plot(recent['week_start'], recent['ilitotal'],
+            label='Weekly ILI Cases', marker='o', markersize=8,
+            linewidth=2.5, color='#2196F3')
+
+    if evaluation['exceeds']:
+        last_date = pd.Timestamp(evaluation['week_start'])
+        actual = evaluation['actual_ili']
+        ax.axvline(x=last_date, color='#d32f2f', linewidth=2.5,
+                   linestyle='--',
+                   label=f'Exceeds prediction (>{EXCEED_THRESHOLD * 100:.0f}%)')
+        ax.annotate(
+            f"{evaluation['pct_deviation']:+.1f}% vs predicted",
+            xy=(last_date, actual),
+            xytext=(10, 12), textcoords='offset points',
+            color='#d32f2f', fontweight='bold', fontsize=11,
+            arrowprops=dict(arrowstyle='-', color='#d32f2f', lw=1),
+        )
+
+    ax.set_xlabel('Week Starting', fontsize=12, fontweight='bold')
+    ax.set_ylabel('ILI Cases', fontsize=12, fontweight='bold')
+    ax.set_title(
+        f'{STATE} Flu Activity — Last 8 Weeks\n'
+        f'Generated: {datetime.now().strftime("%Y-%m-%d %H:%M UTC")}',
+        fontsize=14, fontweight='bold', pad=20,
     )
     ax.legend(loc='best', fontsize=10)
     ax.grid(True, alpha=0.3, linestyle='--')
@@ -717,12 +830,153 @@ def send_comparison_email(saved_pred, actual_value, new_prediction, plot_buf):
         return False
 
 
+def send_weekly_email(df, saved_pred, prediction, plot_buf, evaluation=None):
+    """Send the weekly flu report email with an 8-week case chart.
+
+    Unlike the legacy deviation-only comparison email, this report is sent on
+    every scheduled run (when email is configured).  The chart plots the last
+    8 weeks of ILI cases and flags the latest data point with a red line when
+    it exceeds the predicted volume by more than EXCEED_THRESHOLD.
+    """
+    if not EMAIL_FROM or not EMAIL_PASSWORD or not EMAIL_TO[0]:
+        logger.warning("Email not configured — skipping weekly report")
+        return False
+
+    if evaluation is None:
+        evaluation = evaluate_last_data_point(df, saved_pred)
+
+    last_date = pd.Timestamp(evaluation['week_start'])
+    actual = evaluation['actual_ili']
+    predicted = evaluation['predicted_ili']
+    exceeds = evaluation['exceeds']
+    pct = evaluation['pct_deviation']
+
+    if exceeds:
+        status_html = (
+            '<span style="color:#d32f2f;font-weight:bold;">'
+            '⚠️ ABOVE PREDICTION</span>'
+        )
+        status_line = (
+            f'Latest week is <span class="bad">{pct:.1f}% above</span> the '
+            f'predicted volume.'
+        )
+    else:
+        status_html = (
+            '<span style="color:#4CAF50;font-weight:bold;">'
+            '✓ Within predicted range</span>'
+        )
+        if pct is None:
+            status_line = 'No same-week prediction available for comparison.'
+        else:
+            status_line = (
+                f'Latest week is <span class="good">{pct:.1f}% vs</span> '
+                f'the predicted volume.'
+            )
+
+    predicted_cell = '—' if predicted is None else f'{predicted:.0f}'
+    pct_cell = '—' if pct is None else f'{pct:+.1f}%'
+
+    subject = (
+        f'📊 Weekly Flu Report — {STATE}: {actual:.0f} cases '
+        f'(week of {last_date.strftime("%Y-%m-%d")})'
+    )
+    if exceeds:
+        subject += ' ⚠️ ABOVE PREDICTION'
+
+    logger.info("Sending weekly email to %d recipient(s)...", len(EMAIL_TO))
+
+    msg = MIMEMultipart('related')
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_FROM
+    msg['To'] = ', '.join(EMAIL_TO)
+
+    html = f"""
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; }}
+            .alert {{ background: #fce4ec; padding: 20px;
+                      border-left: 5px solid #d32f2f; margin: 20px 0; }}
+            .metric {{ font-size: 28px; font-weight: bold; color: #d32f2f; }}
+            .good {{ color: #4CAF50; font-weight: bold; }}
+            .bad {{ color: #d32f2f; font-weight: bold; }}
+            table {{ border-collapse: collapse; width: 100%; margin: 20px 0; }}
+            th, td {{ border: 1px solid #ddd; padding: 12px; text-align: left; }}
+            th {{ background: #f2f2f2; font-weight: bold; }}
+        </style>
+    </head>
+    <body>
+        <h2>📊 Weekly Flu Report — {STATE}</h2>
+        <p><strong>Generated:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}</p>
+        <p>Status: {status_html}</p>
+
+        <div class="alert">
+            <h3>Latest Week (ending {last_date.strftime('%Y-%m-%d')})</h3>
+            <p class="metric">{actual:.0f} ILI cases</p>
+            <p>{status_line}</p>
+        </div>
+
+        <h3>📋 Latest Week vs Prediction</h3>
+        <table>
+            <tr><th>Metric</th><th>Value</th></tr>
+            <tr><td><strong>Week Starting</strong></td><td>{last_date.strftime('%Y-%m-%d')}</td></tr>
+            <tr><td><strong>Actual ILI Cases</strong></td><td>{actual:.0f}</td></tr>
+            <tr><td><strong>Predicted Volume</strong></td><td>{predicted_cell}</td></tr>
+            <tr><td><strong>Deviation</strong></td><td>{pct_cell}</td></tr>
+        </table>
+
+        <h3>🔮 Next Week Forecast</h3>
+        <table>
+            <tr><th>Week Starting</th><th>Predicted ILI</th><th>95% PI</th></tr>
+            <tr>
+                <td><strong>{prediction['week_start'].iloc[0].strftime('%Y-%m-%d')}</strong></td>
+                <td>{prediction['predicted_ili'].iloc[0]:.0f}</td>
+                <td>{prediction['ci_lower'].iloc[0]:.0f} – {prediction['ci_upper'].iloc[0]:.0f}</td>
+            </tr>
+        </table>
+
+        <h3>📈 Weekly Flu Cases (Last 8 Weeks)</h3>
+        <img src="cid:weekly_plot" alt="Weekly Flu Cases (Last 8 Weeks)"
+             style="max-width: 100%%; height: auto;
+                    border: 1px solid #ddd; border-radius: 4px;">
+
+        <p style="margin-top: 30px; color: #666; font-size: 12px;">
+            <em>Automated weekly report from the CDC Flu Prediction System
+            (GitHub Actions)</em><br>
+            Data source: CMU Delphi FluView API  |  State: {STATE}<br>
+            Exceeds-prediction alert threshold: {EXCEED_THRESHOLD*100:.0f}%  |
+            Model: LightGBM<br>
+            Chart is also attached as weekly_flu.png
+        </p>
+    </body>
+    </html>
+    """
+
+    msg.attach(MIMEText(html, 'html'))
+
+    img = MIMEImage(plot_buf.getvalue())
+    img.add_header('Content-ID', '<weekly_plot>')
+    img.add_header('Content-Disposition', 'inline', filename='weekly_flu.png')
+    msg.attach(img)
+
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls()
+            server.login(EMAIL_FROM, EMAIL_PASSWORD)
+            server.send_message(msg)
+        logger.info("✓ Weekly email sent successfully!")
+        return True
+    except Exception as e:
+        logger.error("Failed to send weekly email: %s", e)
+        return False
+
+
 # ===========================================================================
 # Artifacts
 # ===========================================================================
 
 def save_artifacts(prediction, plot_buf, comparison_made=False,
-                   actual_point=None, saved_pred=None):
+                   actual_point=None, saved_pred=None, weekly_plot_buf=None):
     """Persist prediction CSV, chart PNG, and text summary to output/.
 
     Parameters
@@ -737,6 +991,8 @@ def save_artifacts(prediction, plot_buf, comparison_made=False,
         {'week_start': str, 'actual_ili': float, 'predicted_ili': float}
     saved_pred : dict or None
         The prior saved prediction that was compared.
+    weekly_plot_buf : io.BytesIO or None
+        PNG buffer of the last-8-weeks chart; saved when provided.
     """
     try:
         os.makedirs('output', exist_ok=True)
@@ -747,6 +1003,11 @@ def save_artifacts(prediction, plot_buf, comparison_made=False,
         with open('output/forecast_plot.png', 'wb') as f:
             f.write(plot_buf.getvalue())
         logger.info("✓ Plot saved to output/forecast_plot.png")
+
+        if weekly_plot_buf is not None:
+            with open('output/weekly_plot.png', 'wb') as f:
+                f.write(weekly_plot_buf.getvalue())
+            logger.info("✓ Weekly plot saved to output/weekly_plot.png")
 
         with open('output/summary.txt', 'w') as f:
             f.write("CDC Flu Prediction Summary\n")
@@ -782,22 +1043,41 @@ def save_artifacts(prediction, plot_buf, comparison_made=False,
 # Main pipeline
 # ===========================================================================
 
+def write_github_outputs(evaluation, email_sent, prediction):
+    """Write structured outputs for downstream GitHub Actions steps."""
+    out_file = os.environ.get('GITHUB_OUTPUT')
+    if not out_file:
+        return
+
+    try:
+        with open(out_file, 'a') as f:
+            f.write(f"weekly_email_sent={'true' if email_sent else 'false'}\n")
+            f.write(f"exceed_alert={'true' if evaluation['exceeds'] else 'false'}\n")
+            f.write(f"last_week={pd.Timestamp(evaluation['week_start']).strftime('%Y-%m-%d')}\n")
+            f.write(f"last_actual={evaluation['actual_ili']:.0f}\n")
+            if evaluation['predicted_ili'] is not None:
+                f.write(f"last_predicted={evaluation['predicted_ili']:.0f}\n")
+                f.write(f"pct_above={evaluation['pct_deviation']:.1f}\n")
+            f.write(f"next_week={prediction['week_start'].iloc[0].strftime('%Y-%m-%d')}\n")
+            f.write(f"next_predicted={prediction['predicted_ili'].iloc[0]:.0f}\n")
+    except Exception as e:
+        logger.warning("Failed to write GitHub outputs: %s", e)
+
+
 def run_pipeline():
-    """Execute the full CDC flu prediction pipeline.
+    """Execute the full CDC flu prediction pipeline on a weekly schedule.
 
     Flow
     ----
-    1. Fetch latest CDC data.
+    1. Fetch the latest CDC data.
     2. Load the prediction saved by the *previous* run.
-    3. If a saved prediction exists:
-       a. Look up actual ILI for that predicted week.
-       b. If not yet available → exit cleanly (nothing to do).
-       c. If available → compare, log, and send email if the deviation
-          exceeds DEVIATION_THRESHOLD.
+    3. Evaluate the latest data point against its prior prediction
+       (drives the red-line "exceeds prediction by 3 %" alert).
     4. Retrain the model on all available data.
-    5. Predict one week ahead.
-    6. Save the new prediction for the next run.
-    7. Generate plot and artifacts.
+    5. Predict one week ahead and save it for the next run.
+    6. Generate the 8-week chart (with alert line when applicable),
+       the forecast chart, and the text artifacts.
+    7. Send the weekly email report (when email is configured).
     """
     logger.info("=" * 70)
     logger.info("CDC FLU PREDICTION PIPELINE — GITHUB ACTIONS")
@@ -809,53 +1089,10 @@ def run_pipeline():
 
         # 2. Load saved prediction from previous run
         saved_pred = load_saved_prediction()
-        comparison_made = False
-        actual_value = None
 
-        # 3. If a saved prediction exists, check whether actual data is available
-        if saved_pred is not None:
-            actual_value = find_actual_for_prediction(df, saved_pred)
-
-            if actual_value is None:
-                # ---- No new data yet — exit cleanly ----
-                logger.info("")
-                logger.info("=" * 70)
-                logger.info("NO NEW DATA YET — EXITING")
-                logger.info("=" * 70)
-                logger.info(
-                    "Predicted week %s data not yet available from CDC.",
-                    saved_pred['week_start'],
-                )
-                logger.info(
-                    "Last prediction: %.0f  [%.0f, %.0f]",
-                    saved_pred['predicted_ili'],
-                    saved_pred['ci_lower'],
-                    saved_pred['ci_upper'],
-                )
-                logger.info("Nothing to do — pipeline will retry on next scheduled run.")
-                logger.info("=" * 70)
-                return 0
-
-            # ---- Data is available — compare ----
-            predicted = saved_pred['predicted_ili']
-            deviation_pct = abs(predicted - actual_value) / actual_value * 100
-            in_interval = (
-                saved_pred['ci_lower'] <= actual_value <= saved_pred['ci_upper']
-            )
-
-            logger.info("")
-            logger.info("=" * 70)
-            logger.info("PREDICTION vs ACTUAL COMPARISON")
-            logger.info("=" * 70)
-            logger.info("  Week:          %s", saved_pred['week_start'])
-            logger.info("  Predicted:     %.0f  [%.0f, %.0f]",
-                        predicted, saved_pred['ci_lower'], saved_pred['ci_upper'])
-            logger.info("  Actual:        %.0f", actual_value)
-            logger.info("  Deviation:     %.1f%%", deviation_pct)
-            logger.info("  Within 95%% PI: %s", "Yes" if in_interval else "No")
-            logger.info("=" * 70)
-
-            comparison_made = True
+        # 3. Evaluate the latest data point against its prior prediction
+        evaluation = evaluate_last_data_point(df, saved_pred)
+        comparison_made = evaluation['predicted_ili'] is not None
 
         # 4. Train model on full dataset
         model, feature_cols, val_rmse, val_r2 = train_and_evaluate(df)
@@ -880,55 +1117,34 @@ def run_pipeline():
         logger.info("  Validation RMSE:  %.2f", val_rmse)
         logger.info("=" * 70)
 
-        # 7. Create visualization — include comparison markers when available
+        # 7. Create visualizations
+        weekly_plot_buf = create_weekly_plot(df, saved_pred)
+
         actual_point = None
-        if comparison_made and actual_value is not None:
+        if comparison_made:
             actual_point = {
-                'week_start': saved_pred['week_start'],
-                'actual_ili': actual_value,
-                'predicted_ili': saved_pred['predicted_ili'],
+                'week_start': pd.Timestamp(evaluation['week_start']).strftime('%Y-%m-%d'),
+                'actual_ili': evaluation['actual_ili'],
+                'predicted_ili': evaluation['predicted_ili'],
             }
-        plot_buf = create_plot(df, prediction, actual_point)
+        forecast_plot_buf = create_plot(df, prediction, actual_point)
 
         # 8. Save artifacts
         save_artifacts(
-            prediction, plot_buf,
+            prediction, forecast_plot_buf,
             comparison_made=comparison_made,
             actual_point=actual_point,
             saved_pred=saved_pred,
+            weekly_plot_buf=weekly_plot_buf,
         )
 
-        # 9. Send comparison email if deviation exceeds threshold
-        if comparison_made and actual_value is not None:
-            deviation_pct = (
-                abs(saved_pred['predicted_ili'] - actual_value)
-                / actual_value * 100
-            )
-            if deviation_pct > DEVIATION_THRESHOLD * 100:
-                logger.warning(
-                    "⚠️  Prediction deviation %.1f%% exceeds threshold %.0f%%",
-                    deviation_pct, DEVIATION_THRESHOLD * 100,
-                )
-                send_comparison_email(
-                    saved_pred, actual_value, prediction, plot_buf,
-                )
+        # 9. Send the weekly email report (always, when configured)
+        email_sent = send_weekly_email(
+            df, saved_pred, prediction, weekly_plot_buf, evaluation,
+        )
 
-                # Write comparison output for GitHub Actions
-                with open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a') as f:
-                    f.write("comparison_alert=true\n")
-                    f.write(f"comparison_week={saved_pred['week_start']}\n")
-                    f.write(f"comparison_predicted={saved_pred['predicted_ili']:.0f}\n")
-                    f.write(f"comparison_actual={actual_value:.0f}\n")
-                    f.write(f"comparison_deviation_pct={deviation_pct:.1f}\n")
-            else:
-                logger.info(
-                    "✓ Prediction deviation %.1f%% within acceptable range "
-                    "(threshold: %.0f%%)",
-                    deviation_pct, DEVIATION_THRESHOLD * 100,
-                )
-                with open(os.environ.get('GITHUB_OUTPUT', '/dev/null'), 'a') as f:
-                    f.write("comparison_alert=false\n")
-                    f.write(f"comparison_deviation_pct={deviation_pct:.1f}\n")
+        # 10. Emit outputs for downstream GitHub Actions steps
+        write_github_outputs(evaluation, email_sent, prediction)
 
         logger.info("")
         logger.info("=" * 70)

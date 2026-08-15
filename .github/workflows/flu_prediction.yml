@@ -1,5 +1,5 @@
 # .github/workflows/flu_prediction.yml
-# Automated CDC Flu Prediction Pipeline
+# Automated CDC Flu Prediction Pipeline — weekly email report
 
 name: CDC Flu Prediction
 
@@ -11,18 +11,46 @@ on:
   # Allow manual trigger
   workflow_dispatch:
 
-  # Run on push for testing (optional - remove in production)
+  # Run tests on code changes (no email is sent from these runs)
   push:
     branches:
       - main
     paths:
       - 'cdc_flu_pipeline.py'
+      - 'test.py'
+      - 'requirements.txt'
       - '.github/workflows/flu_prediction.yml'
+  pull_request:
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: 🧪 Run unit tests
+      run: pytest test.py -v
+
   predict-flu-activity:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    needs: test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: write
+      issues: write
 
     steps:
     - name: 📥 Checkout repository
@@ -48,9 +76,21 @@ jobs:
         EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
         SMTP_SERVER: ${{ secrets.SMTP_SERVER || 'smtp.gmail.com' }}
         SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
-        DEVIATION_THRESHOLD: ${{ secrets.DEVIATIONTHRESHOLD || '1.1' }}
+        EXCEED_THRESHOLD: ${{ secrets.EXCEED_THRESHOLD || '0.03' }}
       run: |
         python cdc_flu_pipeline.py
+
+    - name: 💾 Persist prediction state
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add state/last_prediction.json
+        if git diff --cached --quiet; then
+          echo "No state changes to commit"
+        else
+          git commit -m "chore: update flu prediction state"
+          git push
+        fi
 
     - name: 📊 Upload prediction artifacts
       if: always()
@@ -60,7 +100,9 @@ jobs:
         path: |
           output/prediction.csv
           output/forecast_plot.png
+          output/weekly_plot.png
           output/summary.txt
+        if-no-files-found: warn
         retention-days: 90
 
     - name: 📝 Create job summary
@@ -75,73 +117,62 @@ jobs:
 
         if [ -f "output/summary.txt" ]; then
           echo "### 📋 Prediction Summary" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
           cat output/summary.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
         fi
 
         if [ -f "output/prediction.csv" ]; then
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📊 Prediction Data" >> $GITHUB_STEP_SUMMARY
-          echo '```csv' >> $GITHUB_STEP_SUMMARY
+          echo '~~~csv' >> $GITHUB_STEP_SUMMARY
           cat output/prediction.csv >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '~~~' >> $GITHUB_STEP_SUMMARY
         fi
 
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "### 📈 Visualization" >> $GITHUB_STEP_SUMMARY
-        echo "See artifacts for forecast plot" >> $GITHUB_STEP_SUMMARY
+        echo "See artifacts for the forecast and weekly charts" >> $GITHUB_STEP_SUMMARY
 
-    - name: 🚨 Create issue on alert
-      if: steps.predict.outputs.alert == 'true'
+    - name: 🚨 Create issue when latest week exceeds prediction
+      if: steps.predict.outputs.exceed_alert == 'true'
       uses: actions/github-script@v7
+      env:
+        STATE: ${{ secrets.STATE || 'California' }}
       with:
         script: |
-          const predicted = '${{ steps.predict.outputs.predicted }}';
-          const threshold = '${{ steps.predict.outputs.threshold }}';
-          const excess = '${{ steps.predict.outputs.excess }}';
+          const lastWeek = '${{ steps.predict.outputs.last_week }}';
+          const actual = '${{ steps.predict.outputs.last_actual }}';
+          const predicted = '${{ steps.predict.outputs.last_predicted }}';
+          const pct = '${{ steps.predict.outputs.pct_above }}';
+          const state = process.env.STATE;
+
+          const body = [
+            '## Flu Activity Alert - ' + state,
+            '',
+            '**Alert Generated:** ' + new Date().toISOString(),
+            '',
+            '### ⚠️ Latest Week Exceeded Prediction by >3%',
+            '',
+            '- **Week Starting:** ' + lastWeek,
+            '- **Actual Cases:** ' + actual,
+            '- **Predicted Volume:** ' + predicted,
+            '- **Excess:** +' + pct + '%',
+            '',
+            'The weekly email report includes a chart with a red line flagging this overage.',
+            '',
+            'View the [workflow run](' + context.payload.repository.html_url + '/actions/runs/' + context.runId + ') for details and artifacts.',
+            '',
+            '---',
+            '*This issue was automatically created by the CDC Flu Prediction Pipeline*'
+          ].join('\n');
 
           github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            title: `🚨 Flu Alert: Next week exceeds threshold (${predicted} cases)`,
-            body: `## Flu Activity Alert - California
-
-            **Alert Generated:** ${new Date().toISOString()}
-
-            ### ⚠️ Threshold Exceeded
-
-            - **Predicted Cases:** ${predicted}
-            - **Alert Threshold:** ${threshold}
-            - **Excess Cases:** +${excess}
-
-            ### 📊 Details
-
-            An automated email has been sent to configured recipients.
-
-            View the [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for more details and artifacts.
-
-            ### 📈 Next Steps
-
-            1. Review the forecast visualization in artifacts
-            2. Check email for detailed analysis
-            3. Consider resource allocation for next week
-
-            ---
-            *This issue was automatically created by the CDC Flu Prediction Pipeline*`,
+            title: '🚨 Flu Alert: latest week ' + pct + '% above prediction (' + actual + ' cases)',
+            body: body,
             labels: ['alert', 'flu-prediction', 'automated']
-          })
-
-    - name: 💬 Comment on commit (if alert)
-      if: steps.predict.outputs.alert == 'true' && github.event_name == 'push'
-      uses: actions/github-script@v7
-      with:
-        script: |
-          github.rest.repos.createCommitComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            commit_sha: context.sha,
-            body: `🚨 **Flu Alert Triggered**\n\nPredicted cases exceed threshold. Check the [workflow run](${context.payload.repository.html_url}/actions/runs/${context.runId}) for details.`
           })
 
     - name: ❌ Notify on failure
@@ -149,41 +180,45 @@ jobs:
       uses: actions/github-script@v7
       with:
         script: |
+          const body = [
+            '## Pipeline Failure',
+            '',
+            '**Failed At:** ' + new Date().toISOString(),
+            '**Workflow:** ' + context.workflow,
+            '**Run ID:** ' + context.runId,
+            '',
+            '### Error Details',
+            '',
+            'The automated flu prediction pipeline encountered an error.',
+            '',
+            '**Possible causes:**',
+            '- CDC API unavailable',
+            '- Network connectivity issues',
+            '- Model training failure',
+            '- Email configuration error',
+            '',
+            '### 🔍 Debug Steps',
+            '',
+            '1. Check the [workflow logs](' + context.payload.repository.html_url + '/actions/runs/' + context.runId + ')',
+            '2. Verify CDC API status: https://data.cdc.gov/',
+            '3. Confirm GitHub Secrets are configured correctly',
+            '4. Review recent code changes',
+            '',
+            '### 📧 Required Secrets',
+            '',
+            'Ensure these secrets are configured in repository settings:',
+            '- EMAIL_SENDER',
+            '- EMAIL_PASSWORD',
+            '- EMAIL_RECIPIENTS',
+            '',
+            '---',
+            '*This issue was automatically created by the CDC Flu Prediction Pipeline*'
+          ].join('\n');
+
           github.rest.issues.create({
             owner: context.repo.owner,
             repo: context.repo.repo,
             title: '❌ Flu Prediction Pipeline Failed',
-            body: `## Pipeline Failure
-
-            **Failed At:** ${new Date().toISOString()}
-            **Workflow:** ${context.workflow}
-            **Run ID:** ${context.runId}
-
-            ### Error Details
-
-            The automated flu prediction pipeline encountered an error.
-
-            **Possible causes:**
-            - CDC API unavailable
-            - Network connectivity issues
-            - Model training failure
-            - Email configuration error
-
-            ### 🔍 Debug Steps
-
-            1. Check the [workflow logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
-            2. Verify CDC API status: https://data.cdc.gov/
-            3. Confirm GitHub Secrets are configured correctly
-            4. Review recent code changes
-
-            ### 📧 Required Secrets
-
-            Ensure these secrets are configured in repository settings:
-            - \`EMAIL_SENDER\`
-            - \`EMAIL_PASSWORD\`
-            - \`EMAIL_RECIPIENTS\`
-
-            ---
-            *This issue was automatically created by the CDC Flu Prediction Pipeline*`,
+            body: body,
             labels: ['bug', 'pipeline-failure', 'automated']
           })

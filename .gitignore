@@ -15,8 +15,11 @@ venv/
 *~
 .DS_Store
 
-# Pipeline artifacts
+# Pipeline artifacts (ephemeral — re-generated on every run)
 output/
+
+# NOTE: state/last_prediction.json is intentionally tracked so the weekly
+# run can compare the latest week against the prior forecast.
 
 # Environment
 .env

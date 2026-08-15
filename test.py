@@ -19,13 +19,17 @@ from cdc_flu_pipeline import (
     train_and_evaluate,
     predict_future,
     create_plot,
+    create_weekly_plot,
     save_artifacts,
     send_comparison_email,
+    send_weekly_email,
     fetch_cdc_data,
     save_prediction,
     load_saved_prediction,
     find_actual_for_prediction,
+    evaluate_last_data_point,
     DEVIATION_THRESHOLD,
+    EXCEED_THRESHOLD,
 )
 
 
@@ -241,6 +245,79 @@ class TestCreatePlot:
 
 
 # ---------------------------------------------------------------------------
+# evaluate_last_data_point
+# ---------------------------------------------------------------------------
+
+class TestEvaluateLastDataPoint:
+    def test_cold_start_has_no_prediction(self, sample_df):
+        result = evaluate_last_data_point(sample_df, None)
+        assert pd.Timestamp(result['week_start']) == pd.Timestamp(sample_df['week_start'].iloc[-1])
+        assert result['actual_ili'] == float(sample_df['ilitotal'].iloc[-1])
+        assert result['predicted_ili'] is None
+        assert result['exceeds'] is False
+
+    def test_matching_week_exceeds_prediction(self, sample_df, monkeypatch):
+        monkeypatch.setattr('cdc_flu_pipeline.EXCEED_THRESHOLD', 0.03)
+        last = sample_df.iloc[-1]
+        actual = float(last['ilitotal'])
+        saved_pred = {
+            'week_start': last['week_start'].strftime('%Y-%m-%d'),
+            'predicted_ili': actual * 0.9,
+        }
+        result = evaluate_last_data_point(sample_df, saved_pred)
+        assert result['predicted_ili'] == actual * 0.9
+        assert result['exceeds'] is True
+        assert result['pct_deviation'] > 3.0
+
+    def test_matching_week_within_threshold(self, sample_df, monkeypatch):
+        monkeypatch.setattr('cdc_flu_pipeline.EXCEED_THRESHOLD', 0.03)
+        last = sample_df.iloc[-1]
+        actual = float(last['ilitotal'])
+        saved_pred = {
+            'week_start': last['week_start'].strftime('%Y-%m-%d'),
+            'predicted_ili': actual * 1.01,
+        }
+        result = evaluate_last_data_point(sample_df, saved_pred)
+        assert result['exceeds'] is False
+
+    def test_non_matching_week_no_comparison(self, sample_df):
+        saved_pred = {
+            'week_start': (sample_df['week_start'].iloc[-1] - timedelta(weeks=3)).strftime('%Y-%m-%d'),
+            'predicted_ili': 1500.0,
+        }
+        result = evaluate_last_data_point(sample_df, saved_pred)
+        assert result['predicted_ili'] is None
+        assert result['exceeds'] is False
+
+
+# ---------------------------------------------------------------------------
+# create_weekly_plot
+# ---------------------------------------------------------------------------
+
+class TestCreateWeeklyPlot:
+    def test_returns_bytesio_buffer(self, sample_df):
+        buf = create_weekly_plot(sample_df)
+        assert isinstance(buf, io.BytesIO)
+        assert buf.getbuffer().nbytes > 0
+
+    def test_plot_with_alert_line(self, sample_df, monkeypatch):
+        monkeypatch.setattr('cdc_flu_pipeline.EXCEED_THRESHOLD', 0.03)
+        last = sample_df.iloc[-1]
+        saved_pred = {
+            'week_start': last['week_start'].strftime('%Y-%m-%d'),
+            'predicted_ili': float(last['ilitotal']) * 0.9,
+        }
+        buf = create_weekly_plot(sample_df, saved_pred)
+        assert isinstance(buf, io.BytesIO)
+        assert buf.getbuffer().nbytes > 0
+
+    def test_plot_without_prediction(self, sample_df):
+        buf = create_weekly_plot(sample_df, None)
+        assert isinstance(buf, io.BytesIO)
+        assert buf.getbuffer().nbytes > 0
+
+
+# ---------------------------------------------------------------------------
 # save_artifacts
 # ---------------------------------------------------------------------------
 
@@ -420,6 +497,64 @@ class TestSendComparisonEmail:
             send_comparison_email(saved_pred, 2000.0, new_prediction, buf)
             call_args = mock_server.send_message.call_args[0][0]
             assert 'under-predicted' in call_args['Subject']
+
+
+# ---------------------------------------------------------------------------
+# send_weekly_email (unit; no real SMTP)
+# ---------------------------------------------------------------------------
+
+class TestSendWeeklyEmail:
+    def _prediction(self, sample_df):
+        return pd.DataFrame([{
+            'week_start': sample_df['week_start'].max() + timedelta(weeks=1),
+            'predicted_ili': 1500.0,
+            'ci_lower': 1200.0,
+            'ci_upper': 1800.0,
+        }])
+
+    def test_skips_when_not_configured(self, sample_df, monkeypatch):
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_FROM', None)
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_PASSWORD', None)
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_TO', [''])
+        result = send_weekly_email(sample_df, None, self._prediction(sample_df), io.BytesIO(b'fake-png'))
+        assert result is False
+
+    def test_sends_when_configured(self, sample_df, monkeypatch):
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_FROM', 'test@example.com')
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_PASSWORD', 'password')
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_TO', ['to@example.com'])
+        monkeypatch.setattr('cdc_flu_pipeline.SMTP_SERVER', 'localhost')
+        monkeypatch.setattr('cdc_flu_pipeline.SMTP_PORT', 587)
+
+        with patch('smtplib.SMTP') as mock_smtp:
+            mock_server = MagicMock()
+            mock_smtp.return_value.__enter__.return_value = mock_server
+            result = send_weekly_email(sample_df, None, self._prediction(sample_df), io.BytesIO(b'fake-png'))
+            assert result is True
+            mock_server.starttls.assert_called_once()
+            mock_server.login.assert_called_once()
+            mock_server.send_message.assert_called_once()
+
+    def test_subject_flags_above_prediction(self, sample_df, monkeypatch):
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_FROM', 'test@example.com')
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_PASSWORD', 'password')
+        monkeypatch.setattr('cdc_flu_pipeline.EMAIL_TO', ['to@example.com'])
+        monkeypatch.setattr('cdc_flu_pipeline.SMTP_SERVER', 'localhost')
+        monkeypatch.setattr('cdc_flu_pipeline.SMTP_PORT', 587)
+        monkeypatch.setattr('cdc_flu_pipeline.EXCEED_THRESHOLD', 0.03)
+
+        last = sample_df.iloc[-1]
+        saved_pred = {
+            'week_start': last['week_start'].strftime('%Y-%m-%d'),
+            'predicted_ili': float(last['ilitotal']) * 0.9,
+        }
+
+        with patch('smtplib.SMTP') as mock_smtp:
+            mock_server = MagicMock()
+            mock_smtp.return_value.__enter__.return_value = mock_server
+            send_weekly_email(sample_df, saved_pred, self._prediction(sample_df), io.BytesIO(b'fake-png'))
+            msg = mock_server.send_message.call_args[0][0]
+            assert 'ABOVE PREDICTION' in msg['Subject']
 
 
 # ---------------------------------------------------------------------------
@@ -688,8 +823,9 @@ def test_run_pipeline_cold_start(sample_df, monkeypatch, tmp_path):
         assert (tmp_path / 'output' / 'last_prediction.json').exists()
 
 
-def test_run_pipeline_no_new_data(sample_df, monkeypatch, tmp_path):
-    """Saved prediction exists but actual data isn't available → exit early."""
+def test_run_pipeline_with_stale_prediction(sample_df, monkeypatch, tmp_path):
+    """Saved prediction exists but its week is not the latest data point →
+    pipeline still runs and produces artifacts, without a same-week compare."""
     monkeypatch.chdir(tmp_path)
 
     monkeypatch.setattr('cdc_flu_pipeline.EMAIL_FROM', None)
@@ -714,29 +850,29 @@ def test_run_pipeline_no_new_data(sample_df, monkeypatch, tmp_path):
         from cdc_flu_pipeline import run_pipeline
         exit_code = run_pipeline()
         assert exit_code == 0
-        # No artifacts should be created on early exit
-        assert not (tmp_path / 'output' / 'prediction.csv').exists()
+        assert (tmp_path / 'output' / 'prediction.csv').exists()
+        assert (tmp_path / 'output' / 'weekly_plot.png').exists()
 
 
 def test_run_pipeline_with_comparison(sample_df, monkeypatch, tmp_path):
-    """Saved prediction exists AND actual data available → compare & retrain."""
+    """Saved prediction matches the latest data point → compare, flag, and
+    produce artifacts including the weekly chart."""
     monkeypatch.chdir(tmp_path)
 
     monkeypatch.setattr('cdc_flu_pipeline.EMAIL_FROM', None)
     monkeypatch.setattr('cdc_flu_pipeline.EMAIL_PASSWORD', None)
     monkeypatch.setattr('cdc_flu_pipeline.EMAIL_TO', [''])
-    monkeypatch.setattr('cdc_flu_pipeline.DEVIATION_THRESHOLD', 0.99)
 
-    existing_week = sample_df['week_start'].iloc[-5]
-    actual_val = sample_df[sample_df['week_start'] == existing_week]['ilitotal'].iloc[0]
+    last_week = sample_df['week_start'].iloc[-1]
+    actual_val = float(sample_df[sample_df['week_start'] == last_week]['ilitotal'].iloc[0])
 
     pred_file = tmp_path / 'output' / 'last_prediction.json'
     pred_file.parent.mkdir(parents=True, exist_ok=True)
     pred_file.write_text(json.dumps({
-        "week_start": existing_week.strftime('%Y-%m-%d'),
-        "predicted_ili": actual_val * 1.01,
-        "ci_lower": actual_val * 0.8,
-        "ci_upper": actual_val * 1.2,
+        "week_start": last_week.strftime('%Y-%m-%d'),
+        "predicted_ili": actual_val * 0.9,
+        "ci_lower": actual_val * 0.7,
+        "ci_upper": actual_val * 1.0,
         "generated_at": "2024-01-01T00:00:00Z",
     }))
 
@@ -749,6 +885,7 @@ def test_run_pipeline_with_comparison(sample_df, monkeypatch, tmp_path):
 
         assert (tmp_path / 'output' / 'prediction.csv').exists()
         assert (tmp_path / 'output' / 'forecast_plot.png').exists()
+        assert (tmp_path / 'output' / 'weekly_plot.png').exists()
         assert (tmp_path / 'output' / 'summary.txt').exists()
 
         summary = (tmp_path / 'output' / 'summary.txt').read_text()
