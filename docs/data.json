@@ -1,0 +1,848 @@
+{
+  "generated_at": "2026-10-17T20:05:36Z",
+  "source": "CDC FluView via CMU Delphi API",
+  "states": {
+    "AL": [
+      {
+        "epiweek": 202615,
+        "week_start": "2026-04-12",
+        "ilitotal": 693,
+        "total_patients": 43261,
+        "percent_ili": 1.6019
+      },
+      {
+        "epiweek": 202616,
+        "week_start": "2026-04-19",
+        "ilitotal": 621,
+        "total_patients": 40746,
+        "percent_ili": 1.52408
+      },
+      {
+        "epiweek": 202617,
+        "week_start": "2026-04-26",
+        "ilitotal": 537,
+        "total_patients": 40509,
+        "percent_ili": 1.32563
+      },
+      {
+        "epiweek": 202618,
+        "week_start": "2026-05-03",
+        "ilitotal": 557,
+        "total_patients": 39645,
+        "percent_ili": 1.40497
+      },
+      {
+        "epiweek": 202619,
+        "week_start": "2026-05-10",
+        "ilitotal": 652,
+        "total_patients": 41622,
+        "percent_ili": 1.56648
+      },
+      {
+        "epiweek": 202620,
+        "week_start": "2026-05-17",
+        "ilitotal": 585,
+        "total_patients": 40458,
+        "percent_ili": 1.44594
+      },
+      {
+        "epiweek": 202621,
+        "week_start": "2026-05-24",
+        "ilitotal": 552,
+        "total_patients": 41061,
+        "percent_ili": 1.34434
+      },
+      {
+        "epiweek": 202622,
+        "week_start": "2026-05-31",
+        "ilitotal": 386,
+        "total_patients": 40904,
+        "percent_ili": 0.943673
+      },
+      {
+        "epiweek": 202623,
+        "week_start": "2026-06-07",
+        "ilitotal": 362,
+        "total_patients": 41152,
+        "percent_ili": 0.879666
+      },
+      {
+        "epiweek": 202624,
+        "week_start": "2026-06-14",
+        "ilitotal": 335,
+        "total_patients": 40027,
+        "percent_ili": 0.836935
+      },
+      {
+        "epiweek": 202625,
+        "week_start": "2026-06-21",
+        "ilitotal": 332,
+        "total_patients": 40218,
+        "percent_ili": 0.825501
+      },
+      {
+        "epiweek": 202626,
+        "week_start": "2026-06-28",
+        "ilitotal": 270,
+        "total_patients": 38572,
+        "percent_ili": 0.69999
+      },
+      {
+        "epiweek": 202627,
+        "week_start": "2026-07-05",
+        "ilitotal": 319,
+        "total_patients": 42063,
+        "percent_ili": 0.758386
+      },
+      {
+        "epiweek": 202628,
+        "week_start": "2026-07-12",
+        "ilitotal": 291,
+        "total_patients": 40031,
+        "percent_ili": 0.726937
+      },
+      {
+        "epiweek": 202629,
+        "week_start": "2026-07-19",
+        "ilitotal": 323,
+        "total_patients": 41280,
+        "percent_ili": 0.782461
+      },
+      {
+        "epiweek": 202630,
+        "week_start": "2026-07-26",
+        "ilitotal": 289,
+        "total_patients": 40683,
+        "percent_ili": 0.71037
+      },
+      {
+        "epiweek": 202631,
+        "week_start": "2026-08-02",
+        "ilitotal": 308,
+        "total_patients": 41044,
+        "percent_ili": 0.750414
+      },
+      {
+        "epiweek": 202632,
+        "week_start": "2026-08-09",
+        "ilitotal": 361,
+        "total_patients": 43040,
+        "percent_ili": 0.838755
+      },
+      {
+        "epiweek": 202633,
+        "week_start": "2026-08-16",
+        "ilitotal": 591,
+        "total_patients": 45541,
+        "percent_ili": 1.29773
+      },
+      {
+        "epiweek": 202634,
+        "week_start": "2026-08-23",
+        "ilitotal": 856,
+        "total_patients": 46230,
+        "percent_ili": 1.85161
+      },
+      {
+        "epiweek": 202635,
+        "week_start": "2026-08-30",
+        "ilitotal": 798,
+        "total_patients": 45952,
+        "percent_ili": 1.73659
+      },
+      {
+        "epiweek": 202636,
+        "week_start": "2026-09-06",
+        "ilitotal": 757,
+        "total_patients": 44380,
+        "percent_ili": 1.70572
+      },
+      {
+        "epiweek": 202637,
+        "week_start": "2026-09-13",
+        "ilitotal": 687,
+        "total_patients": 43318,
+        "percent_ili": 1.58595
+      },
+      {
+        "epiweek": 202638,
+        "week_start": "2026-09-20",
+        "ilitotal": 740,
+        "total_patients": 45404,
+        "percent_ili": 1.62981
+      },
+      {
+        "epiweek": 202639,
+        "week_start": "2026-09-27",
+        "ilitotal": 871,
+        "total_patients": 45303,
+        "percent_ili": 1.92261
+      },
+      {
+        "epiweek": 202640,
+        "week_start": "2026-10-04",
+        "ilitotal": 1115,
+        "total_patients": 63274,
+        "percent_ili": 1.76218
+      }
+    ],
+    "AK": [
+      {
+        "epiweek": 202513,
+        "week_start": "2025-03-23",
+        "ilitotal": 105,
+        "total_patients": 4303,
+        "percent_ili": 2.44016
+      },
+      {
+        "epiweek": 202514,
+        "week_start": "2025-03-30",
+        "ilitotal": 105,
+        "total_patients": 4334,
+        "percent_ili": 2.4227
+      },
+      {
+        "epiweek": 202515,
+        "week_start": "2025-04-06",
+        "ilitotal": 96,
+        "total_patients": 4322,
+        "percent_ili": 2.22119
+      },
+      {
+        "epiweek": 202516,
+        "week_start": "2025-04-13",
+        "ilitotal": 101,
+        "total_patients": 4306,
+        "percent_ili": 2.34556
+      },
+      {
+        "epiweek": 202517,
+        "week_start": "2025-04-20",
+        "ilitotal": 93,
+        "total_patients": 4301,
+        "percent_ili": 2.16229
+      },
+      {
+        "epiweek": 202518,
+        "week_start": "2025-04-27",
+        "ilitotal": 75,
+        "total_patients": 4232,
+        "percent_ili": 1.77221
+      },
+      {
+        "epiweek": 202519,
+        "week_start": "2025-05-04",
+        "ilitotal": 59,
+        "total_patients": 4297,
+        "percent_ili": 1.37305
+      },
+      {
+        "epiweek": 202520,
+        "week_start": "2025-05-11",
+        "ilitotal": 69,
+        "total_patients": 4328,
+        "percent_ili": 1.59427
+      },
+      {
+        "epiweek": 202521,
+        "week_start": "2025-05-18",
+        "ilitotal": 68,
+        "total_patients": 4341,
+        "percent_ili": 1.56646
+      },
+      {
+        "epiweek": 202522,
+        "week_start": "2025-05-25",
+        "ilitotal": 75,
+        "total_patients": 4337,
+        "percent_ili": 1.72931
+      },
+      {
+        "epiweek": 202523,
+        "week_start": "2025-06-01",
+        "ilitotal": 38,
+        "total_patients": 3927,
+        "percent_ili": 0.96766
+      },
+      {
+        "epiweek": 202524,
+        "week_start": "2025-06-08",
+        "ilitotal": 38,
+        "total_patients": 3927,
+        "percent_ili": 0.96766
+      },
+      {
+        "epiweek": 202525,
+        "week_start": "2025-06-15",
+        "ilitotal": 44,
+        "total_patients": 3970,
+        "percent_ili": 1.10831
+      },
+      {
+        "epiweek": 202526,
+        "week_start": "2025-06-22",
+        "ilitotal": 46,
+        "total_patients": 3943,
+        "percent_ili": 1.16662
+      },
+      {
+        "epiweek": 202527,
+        "week_start": "2025-06-29",
+        "ilitotal": 54,
+        "total_patients": 4049,
+        "percent_ili": 1.33366
+      },
+      {
+        "epiweek": 202528,
+        "week_start": "2025-07-06",
+        "ilitotal": 53,
+        "total_patients": 4160,
+        "percent_ili": 1.27404
+      },
+      {
+        "epiweek": 202529,
+        "week_start": "2025-07-13",
+        "ilitotal": 41,
+        "total_patients": 4103,
+        "percent_ili": 0.999269
+      },
+      {
+        "epiweek": 202530,
+        "week_start": "2025-07-20",
+        "ilitotal": 30,
+        "total_patients": 4219,
+        "percent_ili": 0.711069
+      },
+      {
+        "epiweek": 202531,
+        "week_start": "2025-07-27",
+        "ilitotal": 33,
+        "total_patients": 4095,
+        "percent_ili": 0.805861
+      },
+      {
+        "epiweek": 202532,
+        "week_start": "2025-08-03",
+        "ilitotal": 40,
+        "total_patients": 3965,
+        "percent_ili": 1.00883
+      },
+      {
+        "epiweek": 202533,
+        "week_start": "2025-08-10",
+        "ilitotal": 47,
+        "total_patients": 4005,
+        "percent_ili": 1.17353
+      },
+      {
+        "epiweek": 202534,
+        "week_start": "2025-08-17",
+        "ilitotal": 49,
+        "total_patients": 4116,
+        "percent_ili": 1.19048
+      },
+      {
+        "epiweek": 202535,
+        "week_start": "2025-08-24",
+        "ilitotal": 52,
+        "total_patients": 4001,
+        "percent_ili": 1.29968
+      },
+      {
+        "epiweek": 202536,
+        "week_start": "2025-08-31",
+        "ilitotal": 71,
+        "total_patients": 4091,
+        "percent_ili": 1.73552
+      },
+      {
+        "epiweek": 202537,
+        "week_start": "2025-09-07",
+        "ilitotal": 48,
+        "total_patients": 3984,
+        "percent_ili": 1.20482
+      },
+      {
+        "epiweek": 202538,
+        "week_start": "2025-09-14",
+        "ilitotal": 77,
+        "total_patients": 4154,
+        "percent_ili": 1.85364
+      }
+    ],
+    "AZ": [
+      {
+        "epiweek": 202613,
+        "week_start": "2026-03-29",
+        "ilitotal": 1482,
+        "total_patients": 64990,
+        "percent_ili": 2.28035
+      },
+      {
+        "epiweek": 202614,
+        "week_start": "2026-04-05",
+        "ilitotal": 1491,
+        "total_patients": 65230,
+        "percent_ili": 2.28576
+      },
+      {
+        "epiweek": 202615,
+        "week_start": "2026-04-12",
+        "ilitotal": 1377,
+        "total_patients": 64697,
+        "percent_ili": 2.12838
+      },
+      {
+        "epiweek": 202616,
+        "week_start": "2026-04-19",
+        "ilitotal": 1440,
+        "total_patients": 65056,
+        "percent_ili": 2.21348
+      },
+      {
+        "epiweek": 202617,
+        "week_start": "2026-04-26",
+        "ilitotal": 1326,
+        "total_patients": 63748,
+        "percent_ili": 2.08007
+      },
+      {
+        "epiweek": 202618,
+        "week_start": "2026-05-03",
+        "ilitotal": 1153,
+        "total_patients": 63334,
+        "percent_ili": 1.82051
+      },
+      {
+        "epiweek": 202619,
+        "week_start": "2026-05-10",
+        "ilitotal": 1078,
+        "total_patients": 62139,
+        "percent_ili": 1.73482
+      },
+      {
+        "epiweek": 202620,
+        "week_start": "2026-05-17",
+        "ilitotal": 994,
+        "total_patients": 60917,
+        "percent_ili": 1.63173
+      },
+      {
+        "epiweek": 202621,
+        "week_start": "2026-05-24",
+        "ilitotal": 938,
+        "total_patients": 61476,
+        "percent_ili": 1.5258
+      },
+      {
+        "epiweek": 202622,
+        "week_start": "2026-05-31",
+        "ilitotal": 777,
+        "total_patients": 59319,
+        "percent_ili": 1.30987
+      },
+      {
+        "epiweek": 202623,
+        "week_start": "2026-06-07",
+        "ilitotal": 587,
+        "total_patients": 58775,
+        "percent_ili": 0.998724
+      },
+      {
+        "epiweek": 202624,
+        "week_start": "2026-06-14",
+        "ilitotal": 510,
+        "total_patients": 58910,
+        "percent_ili": 0.865727
+      },
+      {
+        "epiweek": 202625,
+        "week_start": "2026-06-21",
+        "ilitotal": 430,
+        "total_patients": 58130,
+        "percent_ili": 0.739721
+      },
+      {
+        "epiweek": 202626,
+        "week_start": "2026-06-28",
+        "ilitotal": 397,
+        "total_patients": 56609,
+        "percent_ili": 0.701302
+      },
+      {
+        "epiweek": 202627,
+        "week_start": "2026-07-05",
+        "ilitotal": 461,
+        "total_patients": 59361,
+        "percent_ili": 0.776604
+      },
+      {
+        "epiweek": 202628,
+        "week_start": "2026-07-12",
+        "ilitotal": 420,
+        "total_patients": 58521,
+        "percent_ili": 0.717691
+      },
+      {
+        "epiweek": 202629,
+        "week_start": "2026-07-19",
+        "ilitotal": 462,
+        "total_patients": 59285,
+        "percent_ili": 0.779286
+      },
+      {
+        "epiweek": 202630,
+        "week_start": "2026-07-26",
+        "ilitotal": 426,
+        "total_patients": 59719,
+        "percent_ili": 0.713341
+      },
+      {
+        "epiweek": 202631,
+        "week_start": "2026-08-02",
+        "ilitotal": 519,
+        "total_patients": 60440,
+        "percent_ili": 0.858703
+      },
+      {
+        "epiweek": 202632,
+        "week_start": "2026-08-09",
+        "ilitotal": 652,
+        "total_patients": 62688,
+        "percent_ili": 1.04007
+      },
+      {
+        "epiweek": 202633,
+        "week_start": "2026-08-16",
+        "ilitotal": 911,
+        "total_patients": 64127,
+        "percent_ili": 1.42062
+      },
+      {
+        "epiweek": 202634,
+        "week_start": "2026-08-23",
+        "ilitotal": 1079,
+        "total_patients": 65661,
+        "percent_ili": 1.64329
+      },
+      {
+        "epiweek": 202635,
+        "week_start": "2026-08-30",
+        "ilitotal": 898,
+        "total_patients": 62041,
+        "percent_ili": 1.44743
+      },
+      {
+        "epiweek": 202636,
+        "week_start": "2026-09-06",
+        "ilitotal": 835,
+        "total_patients": 63026,
+        "percent_ili": 1.32485
+      },
+      {
+        "epiweek": 202637,
+        "week_start": "2026-09-13",
+        "ilitotal": 898,
+        "total_patients": 60665,
+        "percent_ili": 1.48026
+      },
+      {
+        "epiweek": 202638,
+        "week_start": "2026-09-20",
+        "ilitotal": 976,
+        "total_patients": 62124,
+        "percent_ili": 1.57105
+      }
+    ],
+    "AR": [
+      {
+        "epiweek": 202615,
+        "week_start": "2026-04-12",
+        "ilitotal": 157,
+        "total_patients": 9665,
+        "percent_ili": 1.62442
+      },
+      {
+        "epiweek": 202616,
+        "week_start": "2026-04-19",
+        "ilitotal": 146,
+        "total_patients": 10494,
+        "percent_ili": 1.39127
+      },
+      {
+        "epiweek": 202617,
+        "week_start": "2026-04-26",
+        "ilitotal": 157,
+        "total_patients": 9605,
+        "percent_ili": 1.63457
+      },
+      {
+        "epiweek": 202618,
+        "week_start": "2026-05-03",
+        "ilitotal": 170,
+        "total_patients": 9594,
+        "percent_ili": 1.77194
+      },
+      {
+        "epiweek": 202619,
+        "week_start": "2026-05-10",
+        "ilitotal": 146,
+        "total_patients": 9417,
+        "percent_ili": 1.55039
+      },
+      {
+        "epiweek": 202620,
+        "week_start": "2026-05-17",
+        "ilitotal": 120,
+        "total_patients": 8153,
+        "percent_ili": 1.47185
+      },
+      {
+        "epiweek": 202621,
+        "week_start": "2026-05-24",
+        "ilitotal": 120,
+        "total_patients": 9441,
+        "percent_ili": 1.27105
+      },
+      {
+        "epiweek": 202622,
+        "week_start": "2026-05-31",
+        "ilitotal": 82,
+        "total_patients": 8875,
+        "percent_ili": 0.923944
+      },
+      {
+        "epiweek": 202623,
+        "week_start": "2026-06-07",
+        "ilitotal": 72,
+        "total_patients": 8915,
+        "percent_ili": 0.807628
+      },
+      {
+        "epiweek": 202624,
+        "week_start": "2026-06-14",
+        "ilitotal": 60,
+        "total_patients": 8751,
+        "percent_ili": 0.685636
+      },
+      {
+        "epiweek": 202625,
+        "week_start": "2026-06-21",
+        "ilitotal": 73,
+        "total_patients": 8801,
+        "percent_ili": 0.829451
+      },
+      {
+        "epiweek": 202626,
+        "week_start": "2026-06-28",
+        "ilitotal": 56,
+        "total_patients": 8458,
+        "percent_ili": 0.662095
+      },
+      {
+        "epiweek": 202627,
+        "week_start": "2026-07-05",
+        "ilitotal": 56,
+        "total_patients": 9104,
+        "percent_ili": 0.615114
+      },
+      {
+        "epiweek": 202628,
+        "week_start": "2026-07-12",
+        "ilitotal": 60,
+        "total_patients": 8856,
+        "percent_ili": 0.677507
+      },
+      {
+        "epiweek": 202629,
+        "week_start": "2026-07-19",
+        "ilitotal": 55,
+        "total_patients": 8679,
+        "percent_ili": 0.633714
+      },
+      {
+        "epiweek": 202630,
+        "week_start": "2026-07-26",
+        "ilitotal": 44,
+        "total_patients": 8177,
+        "percent_ili": 0.538095
+      },
+      {
+        "epiweek": 202631,
+        "week_start": "2026-08-02",
+        "ilitotal": 46,
+        "total_patients": 8725,
+        "percent_ili": 0.527221
+      },
+      {
+        "epiweek": 202632,
+        "week_start": "2026-08-09",
+        "ilitotal": 50,
+        "total_patients": 9165,
+        "percent_ili": 0.545554
+      },
+      {
+        "epiweek": 202633,
+        "week_start": "2026-08-16",
+        "ilitotal": 64,
+        "total_patients": 9370,
+        "percent_ili": 0.683031
+      },
+      {
+        "epiweek": 202634,
+        "week_start": "2026-08-23",
+        "ilitotal": 95,
+        "total_patients": 9274,
+        "percent_ili": 1.02437
+      },
+      {
+        "epiweek": 202635,
+        "week_start": "2026-08-30",
+        "ilitotal": 125,
+        "total_patients": 9905,
+        "percent_ili": 1.26199
+      },
+      {
+        "epiweek": 202636,
+        "week_start": "2026-09-06",
+        "ilitotal": 113,
+        "total_patients": 9729,
+        "percent_ili": 1.16148
+      },
+      {
+        "epiweek": 202637,
+        "week_start": "2026-09-13",
+        "ilitotal": 119,
+        "total_patients": 10065,
+        "percent_ili": 1.18231
+      },
+      {
+        "epiweek": 202638,
+        "week_start": "2026-09-20",
+        "ilitotal": 105,
+        "total_patients": 9621,
+        "percent_ili": 1.09136
+      },
+      {
+        "epiweek": 202639,
+        "week_start": "2026-09-27",
+        "ilitotal": 96,
+        "total_patients": 9099,
+        "percent_ili": 1.05506
+      },
+      {
+        "epiweek": 202640,
+        "week_start": "2026-10-04",
+        "ilitotal": 109,
+        "total_patients": 9819,
+        "percent_ili": 1.11009
+      }
+    ],
+    "CA": [],
+    "CO": [],
+    "CT": [],
+    "DE": [],
+    "FL": [],
+    "GA": [],
+    "HI": [],
+    "ID": [],
+    "IL": [],
+    "IN": [],
+    "IA": [],
+    "KS": [],
+    "KY": [],
+    "LA": [],
+    "ME": [],
+    "MD": [],
+    "MA": [],
+    "MI": [],
+    "MN": [],
+    "MS": [],
+    "MO": [],
+    "MT": [],
+    "NE": [],
+    "NV": [],
+    "NH": [],
+    "NJ": [],
+    "NM": [],
+    "NY": [],
+    "NC": [],
+    "ND": [],
+    "OH": [],
+    "OK": [],
+    "OR": [],
+    "PA": [],
+    "RI": [],
+    "SC": [],
+    "SD": [],
+    "TN": [],
+    "TX": [],
+    "UT": [],
+    "VT": [],
+    "VA": [],
+    "WA": [],
+    "WV": [],
+    "WI": [],
+    "WY": [],
+    "DC": [],
+    "PR": [],
+    "VI": [],
+    "GU": [],
+    "AS": [],
+    "MP": []
+  },
+  "warnings": [
+    "CA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ca&epiweeks=202501-202652",
+    "CO: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=co&epiweeks=202501-202652",
+    "CT: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ct&epiweeks=202501-202652",
+    "DE: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=de&epiweeks=202501-202652",
+    "FL: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=fl&epiweeks=202501-202652",
+    "GA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ga&epiweeks=202501-202652",
+    "HI: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=hi&epiweeks=202501-202652",
+    "ID: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=id&epiweeks=202501-202652",
+    "IL: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=il&epiweeks=202501-202652",
+    "IN: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=in&epiweeks=202501-202652",
+    "IA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ia&epiweeks=202501-202652",
+    "KS: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ks&epiweeks=202501-202652",
+    "KY: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ky&epiweeks=202501-202652",
+    "LA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=la&epiweeks=202501-202652",
+    "ME: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=me&epiweeks=202501-202652",
+    "MD: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=md&epiweeks=202501-202652",
+    "MA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ma&epiweeks=202501-202652",
+    "MI: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=mi&epiweeks=202501-202652",
+    "MN: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=mn&epiweeks=202501-202652",
+    "MS: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ms&epiweeks=202501-202652",
+    "MO: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=mo&epiweeks=202501-202652",
+    "MT: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=mt&epiweeks=202501-202652",
+    "NE: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ne&epiweeks=202501-202652",
+    "NV: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=nv&epiweeks=202501-202652",
+    "NH: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=nh&epiweeks=202501-202652",
+    "NJ: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=nj&epiweeks=202501-202652",
+    "NM: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=nm&epiweeks=202501-202652",
+    "NY: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ny&epiweeks=202501-202652",
+    "NC: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=nc&epiweeks=202501-202652",
+    "ND: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=nd&epiweeks=202501-202652",
+    "OH: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=oh&epiweeks=202501-202652",
+    "OK: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ok&epiweeks=202501-202652",
+    "OR: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=or&epiweeks=202501-202652",
+    "PA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=pa&epiweeks=202501-202652",
+    "RI: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ri&epiweeks=202501-202652",
+    "SC: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=sc&epiweeks=202501-202652",
+    "SD: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=sd&epiweeks=202501-202652",
+    "TN: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=tn&epiweeks=202501-202652",
+    "TX: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=tx&epiweeks=202501-202652",
+    "UT: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=ut&epiweeks=202501-202652",
+    "VT: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=vt&epiweeks=202501-202652",
+    "VA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=va&epiweeks=202501-202652",
+    "WA: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=wa&epiweeks=202501-202652",
+    "WV: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=wv&epiweeks=202501-202652",
+    "WI: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=wi&epiweeks=202501-202652",
+    "WY: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=wy&epiweeks=202501-202652",
+    "DC: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=dc&epiweeks=202501-202652",
+    "PR: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=pr&epiweeks=202501-202652",
+    "VI: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=vi&epiweeks=202501-202652",
+    "GU: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=gu&epiweeks=202501-202652",
+    "AS: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=as&epiweeks=202501-202652",
+    "MP: 429 Client Error: TOO MANY REQUESTS for url: https://api.delphi.cmu.edu/epidata/fluview/?regions=mp&epiweeks=202501-202652"
+  ]
+}
