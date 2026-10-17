@@ -313,7 +313,6 @@
         </details>
 
         <div class="actions">
-          <button class="btn primary" id="copy-btn" type="button">Copy summary for LinkedIn</button>
           <button class="btn" id="csv-btn" type="button">Download all 26 weeks (CSV)</button>
           <span class="btnmsg" id="btnmsg" role="status"></span>
         </div>
@@ -826,31 +825,6 @@
       var v=e.target.value.replace(/\D/g,"").slice(0,5);
       e.target.value=v;
     });
-
-    document.getElementById("copy-btn").addEventListener("click", function(){
-      if (!current) return;
-      var r=current.rows[25];
-      var text="Flu forecast check — ZIP "+current.zip+" ("+current.name+")\n"+
-        "CDC flu cases, last 26 weeks ("+dstrLong(current.rows[0].d)+" – "+dstrLong(r.d)+").\n"+
-        "Using only the previous 25 weeks, I forecast the most recent week ("+ewLabel(r.ew)+", week of "+dstrLong(r.d)+"):\n"+
-        "• Expected: "+fmt(current.fc)+" cases (likely range "+fmt(current.fit.winner.piLo)+"–"+fmt(current.fit.winner.piHi)+")\n"+
-        "• Actual: "+fmt(current.actual)+" cases\n"+
-        "• Difference: "+(current.gapPct>=0?"+":"")+current.gapPct.toFixed(1)+"% ("+fmtSigned(current.gapCases)+" cases) vs what was expected\n"+
-        "Technical note: the forecast model is ARIMA("+current.fit.winner.order+"), selected automatically from several candidates.\n"+
-        "Pipeline & code: https://github.com/bonapartexiong/cdc-flu-prediction\n"+
-        "#DataScience #Healthcare #TimeSeries #PublicHealth";
-      var done=function(){ document.getElementById("btnmsg").textContent="Copied — ready to paste into LinkedIn."; };
-      if (navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(text).then(done, function(){ fallbackCopy(text); done(); });
-      } else { fallbackCopy(text); done(); }
-    });
-    function fallbackCopy(text){
-      var ta=document.createElement("textarea");
-      ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
-      document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); } catch(e){}
-      document.body.removeChild(ta);
-    }
 
     document.getElementById("csv-btn").addEventListener("click", function(){
       if (!current) return;
