@@ -573,12 +573,6 @@
       var gapPct=(actual-fc)/fc*100, verdict = gapPct>3 ? "above" : (gapPct<-3 ? "below" : "ontarget");
       var xA=X(25), yA=Y(actual), yF=Y(fc);
 
-      /* alert line at the most recent week when above threshold */
-      if (verdict==="above"){
-        s+='<line class="alertline" x1="'+xA+'" y1="'+T+'" x2="'+xA+'" y2="'+(T+ph)+'"/>';
-        s+='<text class="alertlab" x="'+(xA-10)+'" y="'+(T+14)+'" text-anchor="end">MORE THAN 3% HIGHER THAN EXPECTED</text>';
-      }
-
       /* gap band between forecast and actual at the most recent week */
       var bandCls = verdict==="above" ? "gapbar-red" : (verdict==="below" ? "gapbar-green" : "gapbar-amber");
       s+='<rect class="'+bandCls+'" x="'+(xA-13)+'" y="'+Math.min(yA,yF)+'" width="26" height="'+Math.max(3,Math.abs(yA-yF))+'"/>';
@@ -610,12 +604,6 @@
       s+='<rect class="fcdia" x="'+(xA-8)+'" y="'+(yF-8)+'" width="16" height="16" transform="rotate(45 '+xA+' '+yF+')"/>';
       /* actual point for the most recent week */
       s+='<circle class="holdpt" cx="'+xA+'" cy="'+yA+'" r="7.5"/>';
-
-      /* value labels (anchored end, left of the most-recent-week column) */
-      var fcLabY = yF + (actual>=fc ? 26 : -16);
-      var actLabY = yA + (actual>=fc ? -16 : 28);
-      s+='<text class="fclab" x="'+(xA-18)+'" y="'+fcLabY+'" text-anchor="end">Expected '+fmt(fc)+'</text>';
-      s+='<text class="actlab" x="'+(xA-18)+'" y="'+actLabY+'" text-anchor="end">Actual '+fmt(actual)+'</text>';
 
       /* gap annotation */
       var pctCls = verdict==="above" ? "red" : (verdict==="below" ? "green" : "amber");
