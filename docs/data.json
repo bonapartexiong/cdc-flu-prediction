@@ -1,15 +1,8 @@
 {
-  "generated_at": "2026-10-17T20:12:32Z",
+  "generated_at": "2026-10-24T19:21:12Z",
   "source": "CDC FluView via CMU Delphi API",
   "states": {
     "AL": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 693,
-        "total_patients": 43261,
-        "percent_ili": 1.6019
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -184,6 +177,13 @@
         "ilitotal": 1115,
         "total_patients": 63274,
         "percent_ili": 1.76218
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1240,
+        "total_patients": 66706,
+        "percent_ili": 1.8589
       }
     ],
     "AK": [
@@ -556,13 +556,6 @@
     ],
     "AR": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 157,
-        "total_patients": 9665,
-        "percent_ili": 1.62442
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 146,
@@ -736,16 +729,16 @@
         "ilitotal": 109,
         "total_patients": 9819,
         "percent_ili": 1.11009
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 169,
+        "total_patients": 9932,
+        "percent_ili": 1.70157
       }
     ],
     "CA": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 7807,
-        "total_patients": 269449,
-        "percent_ili": 2.89739
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -882,54 +875,54 @@
       {
         "epiweek": 202635,
         "week_start": "2026-08-30",
-        "ilitotal": 6220,
-        "total_patients": 258787,
-        "percent_ili": 2.40352
+        "ilitotal": 6222,
+        "total_patients": 258798,
+        "percent_ili": 2.40419
       },
       {
         "epiweek": 202636,
         "week_start": "2026-09-06",
         "ilitotal": 6079,
-        "total_patients": 236057,
-        "percent_ili": 2.57523
+        "total_patients": 236067,
+        "percent_ili": 2.57512
       },
       {
         "epiweek": 202637,
         "week_start": "2026-09-13",
-        "ilitotal": 6600,
-        "total_patients": 256134,
-        "percent_ili": 2.57678
+        "ilitotal": 6602,
+        "total_patients": 256156,
+        "percent_ili": 2.57734
       },
       {
         "epiweek": 202638,
         "week_start": "2026-09-20",
-        "ilitotal": 6835,
-        "total_patients": 257373,
-        "percent_ili": 2.65568
+        "ilitotal": 6885,
+        "total_patients": 260320,
+        "percent_ili": 2.64482
       },
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 7323,
-        "total_patients": 260161,
-        "percent_ili": 2.8148
+        "ilitotal": 7412,
+        "total_patients": 263164,
+        "percent_ili": 2.81649
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 8488,
-        "total_patients": 270677,
-        "percent_ili": 3.13584
+        "ilitotal": 8629,
+        "total_patients": 273133,
+        "percent_ili": 3.15927
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 8585,
+        "total_patients": 265583,
+        "percent_ili": 3.23251
       }
     ],
     "CO": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 1427,
-        "total_patients": 52445,
-        "percent_ili": 2.72095
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -1104,6 +1097,13 @@
         "ilitotal": 1254,
         "total_patients": 54120,
         "percent_ili": 2.31707
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1139,
+        "total_patients": 50782,
+        "percent_ili": 2.24292
       }
     ],
     "CT": [
@@ -1292,13 +1292,6 @@
     ],
     "DE": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 52,
-        "total_patients": 10622,
-        "percent_ili": 0.48955
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 44,
@@ -1470,18 +1463,18 @@
         "epiweek": 202640,
         "week_start": "2026-10-04",
         "ilitotal": 53,
-        "total_patients": 9478,
-        "percent_ili": 0.55919
+        "total_patients": 10048,
+        "percent_ili": 0.527468
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 48,
+        "total_patients": 7637,
+        "percent_ili": 0.628519
       }
     ],
     "FL": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 5839,
-        "total_patients": 234797,
-        "percent_ili": 2.48683
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -1656,16 +1649,16 @@
         "ilitotal": 7522,
         "total_patients": 237541,
         "percent_ili": 3.16661
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 8949,
+        "total_patients": 249767,
+        "percent_ili": 3.58294
       }
     ],
     "GA": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 1972,
-        "total_patients": 82538,
-        "percent_ili": 2.3892
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -1840,6 +1833,13 @@
         "ilitotal": 1931,
         "total_patients": 85278,
         "percent_ili": 2.26436
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1994,
+        "total_patients": 82009,
+        "percent_ili": 2.43144
       }
     ],
     "HI": [
@@ -2028,13 +2028,6 @@
     ],
     "ID": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 460,
-        "total_patients": 21845,
-        "percent_ili": 2.10575
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 477,
@@ -2208,6 +2201,13 @@
         "ilitotal": 452,
         "total_patients": 23694,
         "percent_ili": 1.90766
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 483,
+        "total_patients": 23432,
+        "percent_ili": 2.06128
       }
     ],
     "IL": [
@@ -2396,13 +2396,6 @@
     ],
     "IN": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 842,
-        "total_patients": 70300,
-        "percent_ili": 1.19772
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 830,
@@ -2573,19 +2566,19 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 1093,
-        "total_patients": 67873,
-        "percent_ili": 1.61036
+        "ilitotal": 1094,
+        "total_patients": 67909,
+        "percent_ili": 1.61098
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1226,
+        "total_patients": 73097,
+        "percent_ili": 1.67722
       }
     ],
     "IA": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 36,
-        "total_patients": 4028,
-        "percent_ili": 0.893744
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -2760,6 +2753,13 @@
         "ilitotal": 28,
         "total_patients": 4481,
         "percent_ili": 0.624861
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 28,
+        "total_patients": 4322,
+        "percent_ili": 0.647848
       }
     ],
     "KS": [
@@ -2948,13 +2948,6 @@
     ],
     "KY": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 877,
-        "total_patients": 149907,
-        "percent_ili": 0.585029
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 765,
@@ -3118,26 +3111,26 @@
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 1028,
-        "total_patients": 134980,
-        "percent_ili": 0.761594
+        "ilitotal": 1034,
+        "total_patients": 135715,
+        "percent_ili": 0.761891
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 1082,
-        "total_patients": 115563,
-        "percent_ili": 0.936286
+        "ilitotal": 1084,
+        "total_patients": 116359,
+        "percent_ili": 0.9316
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1288,
+        "total_patients": 136183,
+        "percent_ili": 0.945786
       }
     ],
     "LA": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 713,
-        "total_patients": 42530,
-        "percent_ili": 1.67646
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -3312,16 +3305,16 @@
         "ilitotal": 1646,
         "total_patients": 46559,
         "percent_ili": 3.5353
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1630,
+        "total_patients": 46689,
+        "percent_ili": 3.49119
       }
     ],
     "ME": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 175,
-        "total_patients": 14083,
-        "percent_ili": 1.24263
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -3496,16 +3489,16 @@
         "ilitotal": 127,
         "total_patients": 13804,
         "percent_ili": 0.920023
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 122,
+        "total_patients": 13657,
+        "percent_ili": 0.893315
       }
     ],
     "MD": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 753,
-        "total_patients": 53954,
-        "percent_ili": 1.39563
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -3663,26 +3656,68 @@
       {
         "epiweek": 202638,
         "week_start": "2026-09-20",
-        "ilitotal": 686,
-        "total_patients": 51576,
-        "percent_ili": 1.33008
+        "ilitotal": 687,
+        "total_patients": 51692,
+        "percent_ili": 1.32903
       },
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 756,
-        "total_patients": 54157,
-        "percent_ili": 1.39594
+        "ilitotal": 757,
+        "total_patients": 54266,
+        "percent_ili": 1.39498
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 696,
-        "total_patients": 53667,
-        "percent_ili": 1.29689
+        "ilitotal": 710,
+        "total_patients": 53886,
+        "percent_ili": 1.3176
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 820,
+        "total_patients": 53724,
+        "percent_ili": 1.52632
       }
     ],
     "MA": [
+      {
+        "epiweek": 202610,
+        "week_start": "2026-03-08",
+        "ilitotal": 2502,
+        "total_patients": 86407,
+        "percent_ili": 2.8956
+      },
+      {
+        "epiweek": 202611,
+        "week_start": "2026-03-15",
+        "ilitotal": 2608,
+        "total_patients": 85450,
+        "percent_ili": 3.05208
+      },
+      {
+        "epiweek": 202612,
+        "week_start": "2026-03-22",
+        "ilitotal": 2974,
+        "total_patients": 88586,
+        "percent_ili": 3.35719
+      },
+      {
+        "epiweek": 202613,
+        "week_start": "2026-03-29",
+        "ilitotal": 2909,
+        "total_patients": 87587,
+        "percent_ili": 3.32127
+      },
+      {
+        "epiweek": 202614,
+        "week_start": "2026-04-05",
+        "ilitotal": 2490,
+        "total_patients": 88461,
+        "percent_ili": 2.8148
+      },
       {
         "epiweek": 202615,
         "week_start": "2026-04-12",
@@ -3829,51 +3864,9 @@
         "ilitotal": 586,
         "total_patients": 85774,
         "percent_ili": 0.683191
-      },
-      {
-        "epiweek": 202636,
-        "week_start": "2026-09-06",
-        "ilitotal": 764,
-        "total_patients": 84867,
-        "percent_ili": 0.900232
-      },
-      {
-        "epiweek": 202637,
-        "week_start": "2026-09-13",
-        "ilitotal": 1081,
-        "total_patients": 89986,
-        "percent_ili": 1.2013
-      },
-      {
-        "epiweek": 202638,
-        "week_start": "2026-09-20",
-        "ilitotal": 1155,
-        "total_patients": 86661,
-        "percent_ili": 1.33278
-      },
-      {
-        "epiweek": 202639,
-        "week_start": "2026-09-27",
-        "ilitotal": 1253,
-        "total_patients": 89397,
-        "percent_ili": 1.40161
-      },
-      {
-        "epiweek": 202640,
-        "week_start": "2026-10-04",
-        "ilitotal": 1600,
-        "total_patients": 95554,
-        "percent_ili": 1.67445
       }
     ],
     "MI": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 1390,
-        "total_patients": 111949,
-        "percent_ili": 1.24164
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -4048,16 +4041,16 @@
         "ilitotal": 1268,
         "total_patients": 108206,
         "percent_ili": 1.17184
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1343,
+        "total_patients": 109434,
+        "percent_ili": 1.22722
       }
     ],
     "MN": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 508,
-        "total_patients": 41124,
-        "percent_ili": 1.23529
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -4222,26 +4215,26 @@
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 411,
-        "total_patients": 40832,
-        "percent_ili": 1.00656
+        "ilitotal": 415,
+        "total_patients": 43438,
+        "percent_ili": 0.955385
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 380,
-        "total_patients": 37167,
-        "percent_ili": 1.02241
+        "ilitotal": 400,
+        "total_patients": 39862,
+        "percent_ili": 1.00346
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 394,
+        "total_patients": 38295,
+        "percent_ili": 1.02885
       }
     ],
     "MS": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 229,
-        "total_patients": 16754,
-        "percent_ili": 1.36684
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -4413,19 +4406,19 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 270,
-        "total_patients": 15261,
-        "percent_ili": 1.76922
+        "ilitotal": 295,
+        "total_patients": 16184,
+        "percent_ili": 1.82279
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 249,
+        "total_patients": 15014,
+        "percent_ili": 1.65845
       }
     ],
     "MO": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 251,
-        "total_patients": 22883,
-        "percent_ili": 1.09688
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -4600,16 +4593,16 @@
         "ilitotal": 533,
         "total_patients": 48841,
         "percent_ili": 1.0913
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 469,
+        "total_patients": 48725,
+        "percent_ili": 0.962545
       }
     ],
     "MT": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 72,
-        "total_patients": 6178,
-        "percent_ili": 1.16543
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -4784,16 +4777,16 @@
         "ilitotal": 48,
         "total_patients": 6643,
         "percent_ili": 0.722565
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 53,
+        "total_patients": 6433,
+        "percent_ili": 0.823877
       }
     ],
     "NE": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 243,
-        "total_patients": 18437,
-        "percent_ili": 1.318
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -4958,26 +4951,26 @@
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 180,
-        "total_patients": 15586,
-        "percent_ili": 1.15488
+        "ilitotal": 183,
+        "total_patients": 15660,
+        "percent_ili": 1.16858
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
         "ilitotal": 235,
-        "total_patients": 16440,
-        "percent_ili": 1.42944
+        "total_patients": 16576,
+        "percent_ili": 1.41771
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 199,
+        "total_patients": 16552,
+        "percent_ili": 1.20227
       }
     ],
     "NV": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 729,
-        "total_patients": 38965,
-        "percent_ili": 1.87091
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -5087,8 +5080,8 @@
         "epiweek": 202631,
         "week_start": "2026-08-02",
         "ilitotal": 317,
-        "total_patients": 36452,
-        "percent_ili": 0.869637
+        "total_patients": 36453,
+        "percent_ili": 0.869613
       },
       {
         "epiweek": 202632,
@@ -5101,57 +5094,64 @@
         "epiweek": 202633,
         "week_start": "2026-08-16",
         "ilitotal": 409,
-        "total_patients": 38425,
-        "percent_ili": 1.06441
+        "total_patients": 38427,
+        "percent_ili": 1.06436
       },
       {
         "epiweek": 202634,
         "week_start": "2026-08-23",
         "ilitotal": 563,
-        "total_patients": 39195,
-        "percent_ili": 1.43641
+        "total_patients": 39196,
+        "percent_ili": 1.43637
       },
       {
         "epiweek": 202635,
         "week_start": "2026-08-30",
         "ilitotal": 616,
-        "total_patients": 39059,
-        "percent_ili": 1.5771
+        "total_patients": 39062,
+        "percent_ili": 1.57698
       },
       {
         "epiweek": 202636,
         "week_start": "2026-09-06",
         "ilitotal": 568,
-        "total_patients": 37722,
-        "percent_ili": 1.50575
+        "total_patients": 37723,
+        "percent_ili": 1.50571
       },
       {
         "epiweek": 202637,
         "week_start": "2026-09-13",
         "ilitotal": 592,
-        "total_patients": 38518,
-        "percent_ili": 1.53694
+        "total_patients": 38520,
+        "percent_ili": 1.53686
       },
       {
         "epiweek": 202638,
         "week_start": "2026-09-20",
         "ilitotal": 643,
-        "total_patients": 39221,
-        "percent_ili": 1.63943
+        "total_patients": 39222,
+        "percent_ili": 1.63939
       },
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
         "ilitotal": 640,
-        "total_patients": 38833,
-        "percent_ili": 1.64808
+        "total_patients": 38866,
+        "percent_ili": 1.64668
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
         "ilitotal": 741,
-        "total_patients": 38976,
-        "percent_ili": 1.90117
+        "total_patients": 39075,
+        "percent_ili": 1.89635
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 827,
+        "total_patients": 37878,
+        "percent_ili": 2.18333
       }
     ],
     "NH": [
@@ -5340,13 +5340,6 @@
     ],
     "NJ": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 787,
-        "total_patients": 27545,
-        "percent_ili": 2.85714
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 780,
@@ -5520,16 +5513,16 @@
         "ilitotal": 861,
         "total_patients": 26758,
         "percent_ili": 3.21773
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 873,
+        "total_patients": 27620,
+        "percent_ili": 3.16075
       }
     ],
     "NM": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 414,
-        "total_patients": 15158,
-        "percent_ili": 2.73123
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -5704,6 +5697,13 @@
         "ilitotal": 294,
         "total_patients": 15695,
         "percent_ili": 1.87321
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 336,
+        "total_patients": 15641,
+        "percent_ili": 2.1482
       }
     ],
     "NY": [
@@ -5892,13 +5892,6 @@
     ],
     "NC": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 1163,
-        "total_patients": 95433,
-        "percent_ili": 1.21866
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 1151,
@@ -6062,26 +6055,26 @@
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 1413,
-        "total_patients": 95395,
-        "percent_ili": 1.48121
+        "ilitotal": 1416,
+        "total_patients": 95579,
+        "percent_ili": 1.4815
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 1638,
-        "total_patients": 96993,
-        "percent_ili": 1.68878
+        "ilitotal": 1645,
+        "total_patients": 98501,
+        "percent_ili": 1.67003
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1676,
+        "total_patients": 100973,
+        "percent_ili": 1.65985
       }
     ],
     "ND": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 120,
-        "total_patients": 17158,
-        "percent_ili": 0.699382
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -6256,16 +6249,16 @@
         "ilitotal": 78,
         "total_patients": 18268,
         "percent_ili": 0.426976
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 67,
+        "total_patients": 18214,
+        "percent_ili": 0.367849
       }
     ],
     "OH": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 682,
-        "total_patients": 40482,
-        "percent_ili": 1.6847
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -6438,8 +6431,15 @@
         "epiweek": 202640,
         "week_start": "2026-10-04",
         "ilitotal": 689,
-        "total_patients": 48381,
-        "percent_ili": 1.42411
+        "total_patients": 48455,
+        "percent_ili": 1.42194
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 731,
+        "total_patients": 48573,
+        "percent_ili": 1.50495
       }
     ],
     "OK": [
@@ -6812,13 +6812,6 @@
     ],
     "PA": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 899,
-        "total_patients": 85093,
-        "percent_ili": 1.05649
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 874,
@@ -6961,54 +6954,47 @@
       {
         "epiweek": 202636,
         "week_start": "2026-09-06",
-        "ilitotal": 854,
-        "total_patients": 83489,
-        "percent_ili": 1.02289
+        "ilitotal": 861,
+        "total_patients": 84125,
+        "percent_ili": 1.02348
       },
       {
         "epiweek": 202637,
         "week_start": "2026-09-13",
-        "ilitotal": 901,
-        "total_patients": 85970,
-        "percent_ili": 1.04804
+        "ilitotal": 904,
+        "total_patients": 86595,
+        "percent_ili": 1.04394
       },
       {
         "epiweek": 202638,
         "week_start": "2026-09-20",
-        "ilitotal": 944,
-        "total_patients": 82300,
-        "percent_ili": 1.14702
+        "ilitotal": 948,
+        "total_patients": 82837,
+        "percent_ili": 1.14442
       },
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 952,
-        "total_patients": 80316,
-        "percent_ili": 1.18532
+        "ilitotal": 956,
+        "total_patients": 81161,
+        "percent_ili": 1.17791
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 941,
-        "total_patients": 72652,
-        "percent_ili": 1.29522
+        "ilitotal": 1061,
+        "total_patients": 76004,
+        "percent_ili": 1.39598
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1267,
+        "total_patients": 86048,
+        "percent_ili": 1.47243
       }
     ],
     "RI": [
-      {
-        "epiweek": 202614,
-        "week_start": "2026-04-05",
-        "ilitotal": 193,
-        "total_patients": 9713,
-        "percent_ili": 1.98703
-      },
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 196,
-        "total_patients": 9791,
-        "percent_ili": 2.00184
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -7176,16 +7162,23 @@
         "ilitotal": 153,
         "total_patients": 9937,
         "percent_ili": 1.5397
+      },
+      {
+        "epiweek": 202640,
+        "week_start": "2026-10-04",
+        "ilitotal": 166,
+        "total_patients": 10464,
+        "percent_ili": 1.58639
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 121,
+        "total_patients": 9802,
+        "percent_ili": 1.23444
       }
     ],
     "SC": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 694,
-        "total_patients": 28849,
-        "percent_ili": 2.40563
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -7360,6 +7353,13 @@
         "ilitotal": 883,
         "total_patients": 28881,
         "percent_ili": 3.05737
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 993,
+        "total_patients": 30787,
+        "percent_ili": 3.22539
       }
     ],
     "SD": [
@@ -7548,13 +7548,6 @@
     ],
     "TN": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 608,
-        "total_patients": 33351,
-        "percent_ili": 1.82303
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 578,
@@ -7725,9 +7718,16 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 756,
-        "total_patients": 32413,
-        "percent_ili": 2.3324
+        "ilitotal": 811,
+        "total_patients": 46944,
+        "percent_ili": 1.72759
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 966,
+        "total_patients": 49288,
+        "percent_ili": 1.95991
       }
     ],
     "TX": [
@@ -8072,13 +8072,6 @@
     ],
     "VT": [
       {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 91,
-        "total_patients": 6363,
-        "percent_ili": 1.43014
-      },
-      {
         "epiweek": 202616,
         "week_start": "2026-04-19",
         "ilitotal": 73,
@@ -8214,54 +8207,54 @@
       {
         "epiweek": 202635,
         "week_start": "2026-08-30",
-        "ilitotal": 36,
-        "total_patients": 5992,
-        "percent_ili": 0.600801
+        "ilitotal": 38,
+        "total_patients": 6380,
+        "percent_ili": 0.595611
       },
       {
         "epiweek": 202636,
         "week_start": "2026-09-06",
-        "ilitotal": 52,
-        "total_patients": 5739,
-        "percent_ili": 0.906081
+        "ilitotal": 57,
+        "total_patients": 6240,
+        "percent_ili": 0.913462
       },
       {
         "epiweek": 202637,
         "week_start": "2026-09-13",
-        "ilitotal": 59,
-        "total_patients": 6021,
-        "percent_ili": 0.979904
+        "ilitotal": 65,
+        "total_patients": 6473,
+        "percent_ili": 1.00417
       },
       {
         "epiweek": 202638,
         "week_start": "2026-09-20",
-        "ilitotal": 50,
-        "total_patients": 5632,
-        "percent_ili": 0.887784
+        "ilitotal": 53,
+        "total_patients": 6080,
+        "percent_ili": 0.871711
       },
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
-        "ilitotal": 64,
-        "total_patients": 6041,
-        "percent_ili": 1.05943
+        "ilitotal": 66,
+        "total_patients": 6494,
+        "percent_ili": 1.01632
       },
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 57,
-        "total_patients": 5843,
-        "percent_ili": 0.975526
+        "ilitotal": 61,
+        "total_patients": 6330,
+        "percent_ili": 0.963665
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 61,
+        "total_patients": 6017,
+        "percent_ili": 1.01379
       }
     ],
     "VA": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 2009,
-        "total_patients": 114591,
-        "percent_ili": 1.75319
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -8436,16 +8429,16 @@
         "ilitotal": 2771,
         "total_patients": 122625,
         "percent_ili": 2.25973
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 2962,
+        "total_patients": 127457,
+        "percent_ili": 2.32392
       }
     ],
     "WA": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 2129,
-        "total_patients": 112331,
-        "percent_ili": 1.89529
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -8617,19 +8610,19 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 2811,
-        "total_patients": 155829,
-        "percent_ili": 1.8039
+        "ilitotal": 2815,
+        "total_patients": 155868,
+        "percent_ili": 1.80602
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 3060,
+        "total_patients": 156806,
+        "percent_ili": 1.95146
       }
     ],
     "WV": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 267,
-        "total_patients": 14100,
-        "percent_ili": 1.89362
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -8801,19 +8794,19 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 291,
-        "total_patients": 11268,
-        "percent_ili": 2.58253
+        "ilitotal": 358,
+        "total_patients": 12969,
+        "percent_ili": 2.76043
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 373,
+        "total_patients": 12732,
+        "percent_ili": 2.92963
       }
     ],
     "WI": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 427,
-        "total_patients": 50315,
-        "percent_ili": 0.848653
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -8985,26 +8978,19 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 495,
-        "total_patients": 50842,
-        "percent_ili": 0.973605
+        "ilitotal": 506,
+        "total_patients": 52515,
+        "percent_ili": 0.963534
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 509,
+        "total_patients": 49293,
+        "percent_ili": 1.0326
       }
     ],
     "WY": [
-      {
-        "epiweek": 202614,
-        "week_start": "2026-04-05",
-        "ilitotal": 57,
-        "total_patients": 2771,
-        "percent_ili": 2.05702
-      },
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 39,
-        "total_patients": 2563,
-        "percent_ili": 1.52165
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -9163,25 +9149,32 @@
         "epiweek": 202638,
         "week_start": "2026-09-20",
         "ilitotal": 39,
-        "total_patients": 1617,
-        "percent_ili": 2.41187
+        "total_patients": 1735,
+        "percent_ili": 2.24784
       },
       {
         "epiweek": 202639,
         "week_start": "2026-09-27",
         "ilitotal": 30,
-        "total_patients": 1571,
-        "percent_ili": 1.90961
+        "total_patients": 1678,
+        "percent_ili": 1.78784
+      },
+      {
+        "epiweek": 202640,
+        "week_start": "2026-10-04",
+        "ilitotal": 32,
+        "total_patients": 1554,
+        "percent_ili": 2.0592
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 45,
+        "total_patients": 1815,
+        "percent_ili": 2.47934
       }
     ],
     "DC": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 136,
-        "total_patients": 5338,
-        "percent_ili": 2.54777
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -9356,16 +9349,16 @@
         "ilitotal": 211,
         "total_patients": 6473,
         "percent_ili": 3.25969
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 180,
+        "total_patients": 6461,
+        "percent_ili": 2.78595
       }
     ],
     "PR": [
-      {
-        "epiweek": 202615,
-        "week_start": "2026-04-12",
-        "ilitotal": 414,
-        "total_patients": 15812,
-        "percent_ili": 2.61826
-      },
       {
         "epiweek": 202616,
         "week_start": "2026-04-19",
@@ -9537,9 +9530,16 @@
       {
         "epiweek": 202640,
         "week_start": "2026-10-04",
-        "ilitotal": 1380,
-        "total_patients": 30199,
-        "percent_ili": 4.56969
+        "ilitotal": 1401,
+        "total_patients": 30667,
+        "percent_ili": 4.56843
+      },
+      {
+        "epiweek": 202641,
+        "week_start": "2026-10-11",
+        "ilitotal": 1332,
+        "total_patients": 30701,
+        "percent_ili": 4.33862
       }
     ],
     "VI": [
