@@ -325,8 +325,7 @@
 
       <footer>
         <p><strong>Data:</strong> CDC FluView (ILINet) via the CMU Delphi Epidatas API &mdash; the same source the repo&rsquo;s
-        <span class="mono">cdc_flu_pipeline.py</span> fetches. Snapshot pulled <strong>Oct 17, 2026</strong>; most states run through MMWR week 2026-W40
-        (week starting Oct 4, 2026). Eight states (AK, CT, HI, NY, OK, OR, SD, UT) have a reporting gap in the FluView feed after Sep 2025, so for their ZIPs the
+        <span class="mono">cdc_flu_pipeline.py</span> fetches. <span id="snapshot-line">Snapshot pulled <strong>Oct 17, 2026</strong>; most states run through MMWR week 2026-W40 (week starting Oct 4, 2026).</span> Eight states (AK, CT, HI, NY, OK, OR, SD, UT) have a reporting gap in the FluView feed after Sep 2025, so for their ZIPs the
         figure uses their most recent 26 <em>continuous</em> reported weeks and says so on the chart. The newest FluView issue is preliminary: where a state&rsquo;s latest week arrived with a collapsed patient count (a reporting-lag signature, e.g. Texas), the window ends at its last complete week instead. FluView does not publish flu case counts for
         American Samoa, Guam, or the Northern Mariana Islands.</p>
         <p><strong>Technical details about the model:</strong> this page implements the ARIMA design described in the technical panel above, fit live in your browser on the previous 25 weeks.
@@ -885,6 +884,26 @@
         renderWith(normalize(data));
         var when = data && data.generated_at ? String(data.generated_at).slice(0,10) : "";
         setDataStatus("Showing the latest refreshed flu data" + (when ? " (data file updated " + when + ")" : "") + ".");
+        var snap = document.getElementById("snapshot-line");
+        if (snap && data && data.states){
+          var latestEw = 0, latestStart = "";
+          Object.keys(data.states).forEach(function(abbr){
+            var weeks = data.states[abbr];
+            if (!Array.isArray(weeks)) return;
+            weeks.forEach(function(wk){
+              if (wk && +wk.epiweek > latestEw){ latestEw = +wk.epiweek; latestStart = String(wk.week_start || ""); }
+            });
+          });
+          if (latestEw && latestStart){
+            var yr = Math.floor(latestEw / 100), wkNum = latestEw % 100;
+            var fmt = function(iso){
+              var d = new Date(iso + "T00:00:00Z");
+              return isNaN(d) ? iso : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+            };
+            snap.innerHTML = "Data last extracted <strong>" + (when ? fmt(when) : "recently") + "</strong>; most states run through MMWR week "
+              + yr + "-W" + (wkNum < 10 ? "0" : "") + wkNum + " (week starting " + fmt(latestStart) + ").";
+          }
+        }
       })
       .catch(function(){
         renderWith(BAKED_FALLBACK_DATA);
